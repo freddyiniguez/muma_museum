@@ -25,13 +25,12 @@ public class EventManager {
 	// Variables
 	private final static String QUEUE_NAME = "muma";
 	
-	
 	/**
 	 * @method Constructor
 	 * @description It creates the EventManager responsible for communicate MuMa components.
 	 */
 	public EventManager(){
-		if (ConnectToRabbit())
+		if (connectToRabbit())
 			System.out.println(">>> SUCCESS! The connection with RabbitMQ was successfully.");
 	}
 	
@@ -39,7 +38,7 @@ public class EventManager {
 	 * @method ConnectToRabbit()
 	 * @return True is connection was successful. False otherwise.
 	 */
-	private boolean ConnectToRabbit(){
+	private boolean connectToRabbit(){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -51,5 +50,12 @@ public class EventManager {
 			System.out.println(">>> WARNING! We have encounter errors when trying to connect to RabbitMQ: " + e.getMessage());
 			return false;
 		}
+	}
+	
+	/**
+	 * @method main
+	 */
+	public static void main(String[] args){
+		EventManager muma = new EventManager();
 	}
 }
