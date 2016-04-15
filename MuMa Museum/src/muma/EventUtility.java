@@ -13,6 +13,8 @@
  * **************************************************************************************
  */
 
+package muma;
+
 import common.IOManager;
 import event.Event;
 import event.EventManagerInterface;

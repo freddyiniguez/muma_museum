@@ -1,290 +1,239 @@
-/**
- * **************************************************************************************
- * File:EventManagerInterface.java 
- * Course: Software Architecture 
- * Project: Event Architectures
- * Institution: Autonomous University of Zacatecas 
- * Date: November 2015
- * Developer: Ferman Ivan Tovar 
- * Reviewer: Perla Velasco Elizondo
- * **************************************************************************************
- * This class provides an interface to the event manager for
- * participants (processes), enabling them to to send and receive events between
- * participants. A participant is any thing (thread, object, process) that
- * instantiates an EventEventManagerInterface object - this automatically
- * attempts to register that entity with the event manager
- * **************************************************************************************
- */
 package event;
 
-import java.rmi.*;
-import java.net.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
 
-public class EventManagerInterface {
+/**
+ * ****************************************************************************************************************
+ * File:EventUtility.java Course: 17655 Project: Assignment 3 Copyright:
+ * Copyright (c) 2009 Carnegie Mellon University Versions: 1.0 February 2009 -
+ * Initial rewrite of original assignment 3 (ajl).
+ * 
+* Description: This class illustrates how to utilize the event manager and
+ * provides a few basic utilities that can help developers test and debug their
+ * systems.
+ * 
+* Parameters: None
+ * 
+* Internal Methods: None
+ * 
+*****************************************************************************************************************
+ */
+import event.Event;
+import event.EventManagerInterface;
+import event.EventQueue;
+import common.IOManager;
 
-    private long participantId = -1;			// This processes ID
-    private RMIEventManagerInterface rmiEvtMgrI = null;	// Event manager interface object
-    private String defaultPort = "1099";		// Default event manager port
+public class EventUtility {
 
-    /**
-     * *************************************************************************
-     * Exceptions::
-     ***************************************************************************
-     */
-    class SendEventException extends Exception {
+    public static void main(String args[]) {
+        IOManager userInput = new IOManager();// IOManager IO Object
+        String evtMgrIP;				// Event Manager IP address
+        String evtMgrPort;				// Event Manager port
+        boolean isDone = false;			// Main loop flag
+        String option;					// Menu choice from user
+        Event evt = null;				// Event object
+        boolean isError;					// Error flag
+        EventQueue queue = null;			// Message Queue
+        int evtId = 0;					// User specified event ID
+        EventManagerInterface ef = null;// Interface object to the event manager
 
-        SendEventException() {
-            super();
-        }
+		/////////////////////////////////////////////////////////////////////////////////
+        // Get the IP address of the event manager
+        /////////////////////////////////////////////////////////////////////////////////
+        System.out.println("\n\n\n\n");
 
-        SendEventException(String s) {
-            super(s);
-        }
+        System.out.println("Enter IP address of event manager or...");
+        System.out.print("press enter if on local machine: ");
+        evtMgrIP = userInput.keyboardReadString();
 
-    } // Exception
+        System.out.println("\n\n\n\n");
 
-    class GetEventException extends Exception {
+        System.out.print("\n\nAttempting to register...");
 
-        GetEventException() {
-            super();
-        }
-
-        GetEventException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    class ParticipantAlreadyRegisteredException extends Exception {
-
-        ParticipantAlreadyRegisteredException() {
-            super();
-        }
-
-        ParticipantAlreadyRegisteredException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    class ParticipantNotRegisteredException extends Exception {
-
-        ParticipantNotRegisteredException() {
-            super();
-        }
-
-        ParticipantNotRegisteredException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    class LocatingEventManagerException extends Exception {
-
-        LocatingEventManagerException() {
-            super();
-        }
-
-        LocatingEventManagerException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    class LocalHostIpAddressException extends Exception {
-
-        LocalHostIpAddressException() {
-            super();
-        }
-
-        LocalHostIpAddressException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    class RegistrationException extends Exception {
-
-        RegistrationException() {
-            super();
-        }
-
-        RegistrationException(String s) {
-            super(s);
-        }
-
-    } // Exception
-
-    /**
-     * This method registers participants with the event manager. 
-     * This instantiation should be used when the event manager is on the local 
-     * machine, using the default port.
-     * 
-     * @throws event.EventManagerInterface.LocatingEventManagerException
-     * @throws event.EventManagerInterface.RegistrationException
-     * @throws event.EventManagerInterface.ParticipantAlreadyRegisteredException 
-     */
-    public EventManagerInterface() throws LocatingEventManagerException, RegistrationException, ParticipantAlreadyRegisteredException {
-	// First we check to see if the participant is already registered. If not
-        // we go on with the registration. If the are, we throw an exception.
-        if (participantId == -1) {
+        if (evtMgrIP.length() == 0) {
             try {
-                rmiEvtMgrI = (RMIEventManagerInterface) Naming.lookup("EventManager");
-            } // try
-            catch (Exception e) {
-                throw new LocatingEventManagerException("Event manager not found on local machine at default port (1099)");
+					// Here we create an event manager interface object. This assumes
+                // that the event manager is on the local machine
+
+                ef = new EventManagerInterface();
+            } catch (Exception e) {
+                System.out.println("Error instantiating event manager interface: " + e);
+
             } // catch
-            try {
-                participantId = rmiEvtMgrI.Register();
-            } // try
-            catch (Exception e) {
-                throw new RegistrationException("Error registering participant " + participantId);
-            } // catch
-        } else {
-            throw new ParticipantAlreadyRegisteredException("Participant already registered " + participantId);
-        } // if
-
-    } // EventManagerInterface
-
-    /**
-     * This method registers participants with the event manager at a 
-     * specified IP address. This instantiation is used when the EventManager 
-     * is not on a local machine.
-     * 
-     * @param serverIpAddress The specified address to the Event Manager Server
-     * @throws event.EventManagerInterface.LocatingEventManagerException
-     * @throws event.EventManagerInterface.RegistrationException
-     * @throws event.EventManagerInterface.ParticipantAlreadyRegisteredException 
-     */
-    public EventManagerInterface(String serverIpAddress) throws LocatingEventManagerException,
-            RegistrationException, ParticipantAlreadyRegisteredException {
-	// Assumes that the event manager is on another machine. The user must provide the IP
-        // address of the event manager and the port number
-        String emServer = "//" + serverIpAddress + ":" + defaultPort + "/EventManager";
-        if (participantId == -1) {
-            try {
-                rmiEvtMgrI = (RMIEventManagerInterface) Naming.lookup(emServer);
-            } // try
-            catch (Exception e) {
-                throw new LocatingEventManagerException("Event manager not found on machine at:" + serverIpAddress + "::" + e);
-            } // catch
-            try {
-                participantId = rmiEvtMgrI.Register();
-            } // try
-            catch (Exception e) {
-                throw new RegistrationException("Error registering participant " + participantId);
-            } // catch
-        } else {
-            throw new ParticipantAlreadyRegisteredException("Participant already registered " + participantId);
-        } // if
-
-    } // EventManagerInterface
-
-    /**
-     * This method allows participants to get their participant Id.
-     * 
-     * @return The ID
-     * @throws event.EventManagerInterface.ParticipantNotRegisteredException 
-     */
-    public long getMyId() throws ParticipantNotRegisteredException {
-        if (participantId != -1) {
-            return participantId;
-        } else {
-            throw new ParticipantNotRegisteredException("Participant not registered");
-        } // if
-    } // getMyId
-
-    /**
-     * This method allows participants to obtain the time of registration.
-     * 
-     * @return String time stamp in the format: yyyy MM dd::hh:mm:ss:SSS yyyy =
-     * year MM = month dd = day hh = hour mm = minutes ss = seconds SSS =
-     * milliseconds
-     * @throws event.EventManagerInterface.ParticipantNotRegisteredException 
-     */
-    public String getRegistrationTime() throws ParticipantNotRegisteredException {
-        Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-
-        if (participantId != -1) {
-            TimeStamp.setTimeInMillis(participantId);
-            return (TimeStampFormat.format(TimeStamp.getTime()));
 
         } else {
 
-            throw new ParticipantNotRegisteredException("Participant not registered");
+            if (evtMgrIP.length() != 0) {
+                try {
+					// Here we create an event manager interface object. This assumes
+                    // that the event manager is NOT on the local machine
 
-        } // if
+                    ef = new EventManagerInterface(evtMgrIP);
+                } catch (Exception e) {
+                    System.out.println("Error instantiating event manager interface: " + e);
 
-    } // getRegistrationTime
+                } // catch
 
-    /**
-     * This method sends an event to the event manager.
-     * 
-     * @param evt Event object
-     * @throws event.EventManagerInterface.ParticipantNotRegisteredException
-     * @throws event.EventManagerInterface.SendEventException 
-     */
-    public void sendEvent(Event evt) throws ParticipantNotRegisteredException, SendEventException {
-        if (participantId != -1) {
-            try {
-                evt.setSenderId(participantId);
-                rmiEvtMgrI.SendEvent(evt);
-            } // try
-            catch (Exception e) {
-                throw new SendEventException("Error sending event" + e);
-            } // catch
+            }// if
+
+        }// if
+
+		// Here we check to see if registration worked. If ef is null then the
+        // event manager interface was not properly created.
+        if (ef != null) {
+            System.out.println("Registered with the event manager.\n\n");
+
+            while (!isDone) {
+                // Here is the main menu
+
+                System.out.println("Select an Option: \n");
+                System.out.println("1: What is my ID?");
+                System.out.println("2: What was my registration time? ");
+                System.out.println("3: Send Event Message.");
+                System.out.println("4: Get Event List.");
+                System.out.println("X: Exit \n");
+                System.out.print("\n>>>> ");
+                option = userInput.keyboardReadString();
+
+				//////////// option 1 ////////////
+				// Here we print out the participants ID number. This is established when
+                // the event interface is instantiated. If the participant is not
+                // registered an exception is thrown.
+                if (option.equals("1")) {
+                    try {
+                        long myParticipantID = ef.getMyId();
+                        System.out.println("\nMy participant id = " + myParticipantID);
+
+                    } // try
+                    catch (Exception e) {
+                        System.out.println("Error:: " + e);
+
+                    } // catch
+
+                }
+
+				//////////// option 2 ////////////
+				// Here we print out the participants registrations time. This is actual time
+                // that the event interface was instantiated. If the participant is not
+                // registered an exception is thrown.
+                if (option.equals("2")) {
+                    try {
+                        String myRegistrationTime = ef.getRegistrationTime();
+                        System.out.println("\nMy participant id = " + myRegistrationTime);
+
+                    } // try
+                    catch (Exception e) {
+                        System.out.println("Error:: " + e);
+
+                    } // catch
+
+                }
+
+				//////////// option 3 ////////////
+                if (option.equals("3")) {
+					// Here we get an event ID from the user,... it has to be an integer,
+                    // so the input is verified. If the input is not an integer, we chastise
+                    // the user and ask them to try again...
+
+                    isError = true;
+
+                    while (isError) {
+                        System.out.println("\nEnter an integer event ID: ");
+                        option = userInput.keyboardReadString();
+
+                        if (userInput.isNumber(option)) {
+                            isError = false;
+                            evtId = Integer.valueOf(option).intValue();
+
+                        } else {
+
+                            System.out.println("Please enter an integer value... try again...");
+
+                        } // if
+
+                    } // while
+
+					// Here ask the user to provide a string message to post with the
+                    // if event.
+                    System.out.println("\nEnter a string to post with the event, or enter to continue: ");
+                    option = userInput.keyboardReadString();
+
+					// Here we create the event.
+                    evt = new Event(evtId, option);
+
+					// Here we send the event to the event manager.
+                    try {
+                        ef.sendEvent(evt);
+                        System.out.println("Message posted.");
+
+                    } // try
+                    catch (Exception e) {
+                        System.out.println("Error:: " + e);
+
+                    } // catch
+
+                } // if
+
+				//////////// option 4 ////////////
+                if (option.equals("4")) {
+                    // Here we get the event queue for this event interface from the event manager.
+
+                    isError = true;
+
+                    try {
+                        queue = ef.getEventQueue();
+
+                        System.out.println(queue.getSize() + " messages received...");
+                        System.out.println("=========================");
+
+                        int qlen = queue.getSize();
+
+                        for (int i = 0; i < qlen; i++) {
+                            evt = queue.getEvent();
+                            System.out.print((i + 1) + "::Sender ID: " + evt.getSenderId());
+                            System.out.print(":: Event ID:: " + evt.getEventId());
+                            System.out.println("::" + evt.getMessage());
+
+                        } // for
+
+                        System.out.println("\n");
+
+                    } // try
+                    catch (Exception e) {
+                        System.out.println("Error getting event list: " + e);
+
+                    } // catch
+
+                } // if
+
+				//////////// option X ////////////
+                if (option.equalsIgnoreCase("X")) {
+					// Here the user is done, so we set the Done flag and unregister
+                    // the event interface from the event manager. If you fail to
+                    // unregister, the event manager doesn't know to remove queues.
+                    // These become dead queues and they collect events and will eventually
+                    // cause problems for the event manager.
+
+                    isDone = true;
+
+                    try {
+                        ef.unRegister();
+
+                    } // try
+                    catch (Exception e) {
+                        System.out.println("Error unregistering: " + e);
+
+                    } // catch
+
+                } // if
+
+            } // while
+
         } else {
-            throw new ParticipantNotRegisteredException("Participant not registered");
-        } // if
-    } // sendEvent
 
-    /**
-     * This method sends an event to the
-     * event manager.
-     * 
-     * @return Event object.
-     * @throws event.EventManagerInterface.ParticipantNotRegisteredException
-     * @throws event.EventManagerInterface.GetEventException 
-     */
-    public EventQueue getEventQueue() throws ParticipantNotRegisteredException, GetEventException {
-        EventQueue eq = null;
-        if (participantId != -1) {
-            try {
-                eq = rmiEvtMgrI.GetEventQueue(participantId);
-            } // try
-            catch (Exception e) {
-                throw new GetEventException("Error getting event" + e);
-            } // catch
-        } else {
-            throw new ParticipantNotRegisteredException("Participant not registered");
-        } // if
-        return eq;
-    } // getEventQueue
+            System.out.println("Unable to register with the event manager.\n\n");
 
-    /**
-     * This method is called when the object is no longer used. 
-     * Essentially this method unregisters participants from the event manager. 
-     * It is important that participants actively unregister with the event manager. 
-     * Failure to do so will cause unconnected queues to fill up with messages 
-     * over time. This will result in a memory leak and eventual failure of the 
-     * event manager.
-     * 
-     * @throws event.EventManagerInterface.ParticipantNotRegisteredException
-     * @throws event.EventManagerInterface.RegistrationException 
-     */
-    public void unRegister() throws ParticipantNotRegisteredException, RegistrationException {
-        if (participantId != -1) {
-            try {
-                rmiEvtMgrI.UnRegister(participantId);
-            } // try
-            catch (Exception e) {
-                throw new RegistrationException("Error unregistering" + e);
-            } // catch
-        } else {
-            throw new ParticipantNotRegisteredException("Participant not registered");
         } // if
-    } // unRegister
-} // EventManagerInterface
+
+    } // main
+
+} // EventTest

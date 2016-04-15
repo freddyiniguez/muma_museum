@@ -16,7 +16,7 @@
  * system.
  * **************************************************************************************
  */
-
+package muma;
 import common.*;
 
 public class ECSConsole {

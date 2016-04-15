@@ -15,6 +15,8 @@
  * over/under alarm indicators are triggered.
  * **************************************************************************************
  */
+package muma;
+
 import common.Component;
 import instrumentation.*;
 import event.*;
