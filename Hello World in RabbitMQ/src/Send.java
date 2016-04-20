@@ -25,6 +25,7 @@ public class Send {
 			connection.close();
 		}catch(Exception e){
 			System.out.println(">>> WARNING! We have encounter an error: " + e.getMessage());
+			//jose calando git
 		}
 	}
 }
