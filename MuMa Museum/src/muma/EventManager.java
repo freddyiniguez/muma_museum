@@ -236,14 +236,16 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 
 	@Override
 	public void run() {
-		try {
-			Thread.sleep(1000);
-			System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while(true){
+			try {
+				Thread.sleep(1000);
+				System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
+				// receiveMessageFromTemperatureController();
+				// receiveMessageFromHumidityController();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		// receiveMessageFromTemperatureController();
-		// receiveMessageFromHumidityController();
 	}
 	
 	@Override
@@ -287,12 +289,12 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method main
 	 */
 	public static void main(String[] args){
-		EventManager muma = new EventManager("MuMa Museum: Security Software System");
-		muma.run();
+		new Thread(new EventManager("MuMa Museum: Security Software System")).start();
 		
 		HumidityController humidityController = HumidityController.getInstance();
-        humidityController.run();
+		new Thread(humidityController).start();
+		
 		HumiditySensor humiditySensor = HumiditySensor.getInstance();
-        humiditySensor.run();
+		new Thread(humiditySensor).start();
 	}
 }
