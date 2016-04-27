@@ -166,12 +166,14 @@ public class HumidityController extends Controller implements Runnable {
     
     @Override
     public void run(){
-    	try {
-			Thread.sleep(1000);
-			receiveMessage(SENSOR_HUMIDITY_ID);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    	while(true){
+    		try {
+    			Thread.sleep(1000);
+    			receiveMessage(SENSOR_HUMIDITY_ID);
+    		} catch (InterruptedException e) {
+    			e.printStackTrace();
+    		}
+    	}
     }
 
     private static void createInstance() {
