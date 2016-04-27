@@ -18,10 +18,15 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import javax.swing.*;
-import java.io.IOException;
 
-public class EventManager extends JFrame implements Runnable{
+import javax.swing.*;
+
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+public class EventManager extends JFrame implements Runnable, ActionListener{
 	// Variables
 	private final static String QUEUE_NAME = "muma";
 	private static final long serialVersionUID = 1L;
@@ -69,16 +74,20 @@ public class EventManager extends JFrame implements Runnable{
 		jmbTopBar = new JMenuBar();
 		jmFile = new JMenu("File");
 		jmiExit = new JMenuItem("Exit");
+		jmiExit.addActionListener(this);
 		jmFile.add(jmiExit);
 		jmbTopBar.add(jmFile);
 		
 		jmHelp = new JMenu("Help");
 		jmiAbout = new JMenuItem("About Muma");
+		jmiAbout.addActionListener(this);
 		jmiUserManual = new JMenuItem("See User Manual");
+		jmiUserManual.addActionListener(this);
 		jmHelp.add(jmiUserManual);
 		jmHelp.addSeparator();
 		jmHelp.add(jmiAbout);
 		jmbTopBar.add(jmHelp);
+		this.setJMenuBar(jmbTopBar);
 		
 		this.setTitle(windowTitle);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,7 +122,26 @@ public class EventManager extends JFrame implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(">>> INFO! MuMa Software is runing.");
+		System.out.println(">>> INFO! MuMa Software is running.");
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Exit MuMa Software
+		if(e.getSource()==jmiExit){
+			System.out.println(">>> INFO! Preparing to exit MuMa Software.");
+			System.exit(0);
+		}
+		
+		// Open the User Manual
+		if(e.getSource()==jmiUserManual){
+			try {
+				Desktop.getDesktop().open(new File("src/manuals/userManual.pdf"));
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 	
 	/**
