@@ -27,6 +27,11 @@ import instrumentation.MessageWindow;
 
 public class TemperatureController extends Controller implements Runnable {
 
+	private static final String QUEUE_NAME = "muma";
+	private static final String SENSOR_TEMPERATURE_ID = "-5";
+	private static final String CONTROLLER_TEMPERATURE_ID = "5";
+	private static final String CHANGE_HUMIDITY_ID = "CH";
+	
     private boolean heaterState = false;	// Heater state: false == off, true == on
     private boolean chillerState = false;	// Chiller state: false == off, true == on
     
@@ -34,7 +39,7 @@ public class TemperatureController extends Controller implements Runnable {
     
     private TemperatureController(){
     }
-
+/**
     @Override
     public void run() {
 
@@ -46,7 +51,7 @@ public class TemperatureController extends Controller implements Runnable {
             /* Now we create the temperature control status and message panel
              ** We put this panel about 1/3 the way down the terminal, aligned to the left
              ** of the terminal. The status indicators are placed directly under this panel
-             */
+             *//**
             float winPosX = 0.0f; 	//This is the X position of the message window in terms 
             //of a percentage of the screen height
             float winPosY = 0.3f; 	//This is the Y position of the message window in terms 
@@ -72,7 +77,7 @@ public class TemperatureController extends Controller implements Runnable {
              * ******************************************************************
              ** Here we start the main simulation loop
              * *******************************************************************
-             */
+             *//**
             while (!isDone) {
                 try {
                     queue = evtMgrI.getEventQueue();
@@ -169,7 +174,19 @@ public class TemperatureController extends Controller implements Runnable {
             System.out.println("Unable to register with the event manager.\n\n");
         }
     }
-
+*/
+    @Override
+    public void run(){
+    	while(true){
+    		try {
+    			Thread.sleep(1000);
+    			receiveMessageT(SENSOR_TEMPERATURE_ID);
+    		} catch (InterruptedException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+    
     private static void createInstance() {
         if (INSTANCE == null) {
             synchronized (TemperatureController.class) {

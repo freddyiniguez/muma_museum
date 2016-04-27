@@ -30,7 +30,7 @@ import event.Event;
 import event.EventManagerInterface;
 
 public class Controller extends Component {
-    protected int delay = 2500;				// The loop delay (2.5 seconds)
+    protected int delay = 1000;				// The loop delay (2.5 seconds)
     protected boolean isDone = false;			// Loop termination flag
     private static final String QUEUE_NAME = "muma";
     
@@ -107,6 +107,59 @@ public class Controller extends Component {
 			connection.close();
 		}catch(IOException|TimeoutException e){
 			System.out.println(">>> [HUMIDITY CONTROLLER] ERROR! The Message could not be received: \n" + e.getMessage());
+		}
+	}
+	
+	/**
+	 * @method sendMessageT
+	 * @parameter Receives two parameter. The first one is an identifier to the action to take. The second one is a message.
+	 * @return True is the message was correctly sent.
+	 */
+	protected boolean sendMessageT(String CHANNEL_SEND_ID, String message){
+		try{
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost("localhost");
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			// Sends the message
+			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+			channel.exchangeDeclare(CHANNEL_SEND_ID, "fanout");
+			channel.basicPublish("", QUEUE_NAME, false, false, null, message.getBytes("UTF-8"));
+			channel.close();
+			connection.close();
+			return true;
+		}catch(IOException|TimeoutException e){
+			System.out.println(">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be delivered: \n" + e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * @method receiveMessageT
+	 * @parameter Receives the identifier for the HumiditySensor
+	 * @return True is the message was correctly retrieved.
+	 */
+	protected void receiveMessageT(String CHANNEL_TEMPERATURE_SENSOR_ID){
+		try{
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost("localhost");
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			// Receives the message
+			channel.exchangeDeclare(CHANNEL_TEMPERATURE_SENSOR_ID, "fanout");
+			channel.queueBind(QUEUE_NAME, CHANNEL_TEMPERATURE_SENSOR_ID, "");
+			Consumer consumer;
+			consumer = new DefaultConsumer(channel){
+				@Override
+				public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException{
+					System.out.println(">>> [TEMPERATURE CONTROLLER] SUCESS! I received a message from the Temperature Sensor: " + new String(body, "UTF-8"));
+				}
+			};
+			channel.basicConsume(QUEUE_NAME, true, consumer);
+			channel.close();
+			connection.close();
+		}catch(IOException|TimeoutException e){
+			System.out.println(">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be received: \n" + e.getMessage());
 		}
 	}
 }
