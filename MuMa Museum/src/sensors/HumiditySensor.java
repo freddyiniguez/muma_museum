@@ -34,9 +34,6 @@ public class HumiditySensor extends Sensor implements Runnable {
     private float relativeHumidity;		// Current simulated ambient room humidity
     private static HumiditySensor INSTANCE = new HumiditySensor();
 
-    private HumiditySensor(){
-    }
-
     /**
     @Override
     public void run() {

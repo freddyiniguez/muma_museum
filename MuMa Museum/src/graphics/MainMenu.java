@@ -1,19 +1,22 @@
 package graphics;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 
 import muma.EventManager;
 
@@ -26,20 +29,21 @@ public class MainMenu extends JFrame implements ActionListener {
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
 	
-	private EventManager em;
-	
 	private JMenuBar jmbTopBar;
 	private JMenu jmFile;
 	private JMenu jmHelp;
 	private JMenuItem jmiExit;
 	private JMenuItem jmiAbout;
 	private JMenuItem jmiUserManual;
-	private JLabel jlTemperature;
-	private JTextField jtfTemperature;
-	private JButton jbTemperature;
-	private JLabel jlHumidity;
-	private JTextField jtfHumidity;
-	private JButton jbHumidity;
+	private JLabel jlHumidifier;
+	private JLabel jlDehumidifier;
+	private JLabel jlChiller;
+	private JLabel jlHeater;
+	private JTextField jtfHumidifier;
+	private JTextField jtfDehumifier;
+	private JTextField jtfChiller;
+	private JTextField jtfHeater;
+	
 	
 	/**
 	 * @method Constructor
@@ -75,25 +79,41 @@ public class MainMenu extends JFrame implements ActionListener {
 		this.setJMenuBar(jmbTopBar);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600,600);
-		this.setLayout(new GridLayout(2,3));
+		this.setLayout(new GridLayout(2,2));
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		
-		jlTemperature = new JLabel("Temperature");
-		jtfTemperature = new JTextField("Temperature");
-		jbTemperature = new JButton("Change Temperature");
-		jbTemperature.addActionListener(this);
-		this.add(jlTemperature);
-		this.add(jtfTemperature);
-		this.add(jbTemperature);
+		jlHumidifier = new JLabel("Humidifier", JLabel.CENTER);
+		jtfHumidifier = new JTextField("");
+		jtfHumidifier.setBackground(Color.RED);
+		JPanel firstQuarter = new JPanel(new BorderLayout());
+		firstQuarter.add(jlHumidifier, BorderLayout.NORTH);
+		firstQuarter.add(jtfHumidifier, BorderLayout.CENTER);
+		this.add(firstQuarter);
 		
-		jlHumidity = new JLabel("Humidity");
-		jtfHumidity = new JTextField("Humidity");
-		jbHumidity = new JButton("Change Humidity");
-		jbHumidity.addActionListener(this);
-		this.add(jlHumidity);
-		this.add(jtfHumidity);
-		this.add(jbHumidity);
+		jlDehumidifier = new JLabel("Dehumidifier", JLabel.CENTER);
+		jtfDehumifier = new JTextField("");
+		jtfDehumifier.setBackground(Color.RED);
+		JPanel secondQuarter = new JPanel(new BorderLayout());
+		secondQuarter.add(jlDehumidifier, BorderLayout.NORTH);
+		secondQuarter.add(jtfDehumifier, BorderLayout.CENTER);
+		this.add(secondQuarter);
+		
+		jlChiller = new JLabel("Chiller", JLabel.CENTER);
+		jtfChiller = new JTextField("");
+		jtfChiller.setBackground(Color.RED);
+		JPanel thirdQuarter = new JPanel(new BorderLayout());
+		thirdQuarter.add(jlChiller, BorderLayout.NORTH);
+		thirdQuarter.add(jtfChiller, BorderLayout.CENTER);
+		this.add(thirdQuarter);
+		
+		jlHeater = new JLabel("Heater", JLabel.CENTER);
+		jtfHeater = new JTextField("");
+		jtfHeater.setBackground(Color.RED);
+		JPanel fourthQuarter = new JPanel(new BorderLayout());
+		fourthQuarter.add(jlHeater, BorderLayout.NORTH);
+		fourthQuarter.add(jtfHeater, BorderLayout.CENTER);
+		this.add(fourthQuarter);
 		
 		this.setVisible(true);
 	}
@@ -113,24 +133,6 @@ public class MainMenu extends JFrame implements ActionListener {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-		
-		// Change Temperature
-		if (e.getSource()==jbTemperature){
-			if (em.sendMessage(CHANGE_TEMPERATURE_ID, jtfTemperature.getText())){
-				System.out.println(">>> INFO! The temperature has changed.");
-			}else{
-				System.out.println(">>> ERROR! There was an error changing the temperature.");
-			}
-		}
-		
-		// Change Humidity
-		if (e.getSource()==jbHumidity){
-			if(em.sendMessage(CONTROLLER_HUMIDITY_ID, jtfHumidity.getText())){
-				System.out.println(">>> INFO! The humidity has changed.");
-			}else{
-				System.out.println(">>> ERROR! There was an error changing the humidity");
 			}
 		}
 	}
