@@ -168,8 +168,16 @@ public class HumidityController extends Controller implements Runnable {
     public void run(){
     	while(true){
     		try {
-    			Thread.sleep(1000);
+    			Thread.sleep(delay);
+    			// Receives a message from the humidity sensor
     			receiveMessage(SENSOR_HUMIDITY_ID);
+    			
+    			// Sends a message to the humidity sensor
+    			if(sendMessage(CONTROLLER_HUMIDITY_ID, "50")){
+    				System.out.println(">>> [HUMIDITY CONTROLLER] SUCCESS! New message was sent.");
+    			}else{
+    				System.out.println(">>> [HUMIDITY CONTROLLER] ERROR! A problem was encounter when sending the new message.");
+    			}
     		} catch (InterruptedException e) {
     			e.printStackTrace();
     		}

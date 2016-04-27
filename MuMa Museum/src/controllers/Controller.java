@@ -41,7 +41,7 @@ public class Controller extends Component {
     /**
      * This method posts the specified message to the specified event manager
      * 
-     * @param ei This is the eventmanger interface where the event will be posted.
+     * @param ei This is the eventmanager interface where the event will be posted.
      * @param evtId This is the ID to identify the type of event
      * @param m This is the received command.
      */
