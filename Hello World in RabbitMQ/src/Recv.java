@@ -35,7 +35,7 @@ public class Recv {
 			};
 			channel.basicConsume(QUEUE_NAME, true, consumer);
 		}catch(Exception e){
-			System.out.println(">>> WARNING! We have encounter an error: " + e.getMessage());
+			System.out.println(">>> WARNING! We have encounter an error: una mamada " + e.getMessage());
 		}
 	}
 }
