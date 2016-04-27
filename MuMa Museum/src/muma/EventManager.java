@@ -132,7 +132,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 		this.add(jtfHumidity);
 		this.add(jbHumidity);
 		
-		this.setVisible(true);
+		// this.setVisible(true);
 	}
 	
 	/**
@@ -236,10 +236,10 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 
 	@Override
 	public void run() {
+		System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 		while(true){
 			try {
 				Thread.sleep(1000);
-				System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 				// receiveMessageFromTemperatureController();
 				// receiveMessageFromHumidityController();
 			} catch (InterruptedException e) {

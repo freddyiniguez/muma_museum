@@ -35,6 +35,7 @@ public class Sensor extends Component {
     protected int delay = 2500;				// The loop delay (2.5 seconds)
     protected boolean isDone = false;			// Loop termination flag
     protected float driftValue;				// The amount of temperature gained or lost
+    private static final String QUEUE_NAME = "muma";
 
     
     protected Sensor() {}
@@ -100,8 +101,9 @@ public class Sensor extends Component {
 			Connection connection = factory.newConnection();
 			Channel channel = connection.createChannel();
 			// Sends the message
+			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 			channel.exchangeDeclare(CHANNEL_SEND_ID, "fanout");
-			channel.basicPublish(CHANNEL_SEND_ID, "", null, message.getBytes("UTF-8"));
+			channel.basicPublish("", QUEUE_NAME, false, false, null, message.getBytes("UTF-8"));
 			channel.close();
 			connection.close();
 			return true;
@@ -124,7 +126,7 @@ public class Sensor extends Component {
 			Channel channel = connection.createChannel();
 			// Receives the message
 			channel.exchangeDeclare(CHANNEL_HUMIDITY_CONTROLLER_ID, "fanout");
-			channel.queueBind(channel.queueDeclare().getQueue(), CHANNEL_HUMIDITY_CONTROLLER_ID, "");
+			channel.queueBind(QUEUE_NAME, CHANNEL_HUMIDITY_CONTROLLER_ID, "");
 			Consumer consumer;
 			consumer = new DefaultConsumer(channel){
 				@Override
@@ -132,7 +134,7 @@ public class Sensor extends Component {
 					System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! I received a message from the Humidity Controller: " + new String(body, "UTF-8"));
 				}
 			};
-			channel.basicConsume(channel.queueDeclare().getQueue(), true, consumer);
+			channel.basicConsume(QUEUE_NAME, true, consumer);
 			channel.close();
 			connection.close();
 		}catch(IOException|TimeoutException e){

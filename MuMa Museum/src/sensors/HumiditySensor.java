@@ -172,7 +172,6 @@ public class HumiditySensor extends Sensor implements Runnable {
     			// Receives any new message from the controller
     			receiveMessage(CONTROLLER_HUMIDITY_ID);
     			
-    			System.out.println(">>> [HUMIDITY SENSOR] INFO! Preparing to send a new message");
     			if(sendMessage(SENSOR_HUMIDITY_ID, "100")){
     				System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! New message was sent.");
     			}else{
