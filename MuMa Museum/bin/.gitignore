@@ -1,10 +1,1 @@
-/.DS_Store
-/Diagrams/
-/common/
-/controllers/
-/event/
-/instrumentation/
-/manuals/
-/muma/
-/sensors/
-*.class
+/in_lib/
