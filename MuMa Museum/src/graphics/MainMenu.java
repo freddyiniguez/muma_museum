@@ -85,7 +85,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		jlHumidifier = new JLabel("Humidifier", JLabel.CENTER);
 		jtfHumidifier = new JTextField("");
-		jtfHumidifier.setBackground(Color.RED);
+		jtfHumidifier.setBackground(Color.GRAY);
 		JPanel firstQuarter = new JPanel(new BorderLayout());
 		firstQuarter.add(jlHumidifier, BorderLayout.NORTH);
 		firstQuarter.add(jtfHumidifier, BorderLayout.CENTER);
@@ -93,7 +93,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		jlDehumidifier = new JLabel("Dehumidifier", JLabel.CENTER);
 		jtfDehumifier = new JTextField("");
-		jtfDehumifier.setBackground(Color.RED);
+		jtfDehumifier.setBackground(Color.GRAY);
 		JPanel secondQuarter = new JPanel(new BorderLayout());
 		secondQuarter.add(jlDehumidifier, BorderLayout.NORTH);
 		secondQuarter.add(jtfDehumifier, BorderLayout.CENTER);
@@ -101,7 +101,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		jlChiller = new JLabel("Chiller", JLabel.CENTER);
 		jtfChiller = new JTextField("");
-		jtfChiller.setBackground(Color.RED);
+		jtfChiller.setBackground(Color.GRAY);
 		JPanel thirdQuarter = new JPanel(new BorderLayout());
 		thirdQuarter.add(jlChiller, BorderLayout.NORTH);
 		thirdQuarter.add(jtfChiller, BorderLayout.CENTER);
@@ -109,13 +109,51 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		jlHeater = new JLabel("Heater", JLabel.CENTER);
 		jtfHeater = new JTextField("");
-		jtfHeater.setBackground(Color.RED);
+		jtfHeater.setBackground(Color.GRAY);
 		JPanel fourthQuarter = new JPanel(new BorderLayout());
 		fourthQuarter.add(jlHeater, BorderLayout.NORTH);
 		fourthQuarter.add(jtfHeater, BorderLayout.CENTER);
 		this.add(fourthQuarter);
 		
 		this.setVisible(true);
+	}
+	
+	/** 
+	 * @method updateDevices
+	 * @description Receives the action to change the status of a device
+	 */
+	public void updateDevices(String action){
+		switch(action){
+			case "Hu1":		// Humidifier ON
+				jtfHumidifier.setBackground(Color.GREEN);
+				break;
+			case "Hu0":		// Humidifier OFF
+				jtfHumidifier.setBackground(Color.GRAY);
+				break;
+			case "De1":		// Dehumidifier ON
+				jtfDehumifier.setBackground(Color.GREEN);
+				break;
+			case "De0":		// Dehumidifier OFF
+				jtfDehumifier.setBackground(Color.GRAY);
+				break;
+			case "He1":		// Heater ON
+				jtfHeater.setBackground(Color.GREEN);
+				break;
+			case "He0":		// Heater OFF
+				jtfHeater.setBackground(Color.GRAY);
+				break;
+			case "Ch1":		// Chiller ON
+				jtfChiller.setBackground(Color.GREEN);
+				break;
+			case "Ch0":		// Chiller OFF
+				jtfChiller.setBackground(Color.GRAY);
+				break;
+			default:
+				jtfHumidifier.setBackground(Color.GRAY);
+				jtfDehumifier.setBackground(Color.GRAY);
+				jtfHeater.setBackground(Color.GRAY);
+				jtfChiller.setBackground(Color.GRAY);
+		}
 	}
 	
 	@Override
