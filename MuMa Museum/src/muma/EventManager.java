@@ -19,6 +19,8 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+import controllers.HumidityController;
+
 import javax.swing.*;
 import java.awt.Desktop;
 import java.awt.GridLayout;
@@ -27,6 +29,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+
+import sensors.HumiditySensor;
+import controllers.HumidityController;
+
 
 public class EventManager extends JFrame implements Runnable, ActionListener{
 	private static final String QUEUE_NAME = "muma";
@@ -142,7 +148,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 			channel.queueDeclare();
 			return true;
 		}catch(Exception e){
-			System.out.println(">>> WARNING! We have encounter errors when trying to connect to RabbitMQ: " + e.getMessage());
+			System.out.println(">>> [EVENT MANAGER] WARNING! We have encounter errors when trying to connect to RabbitMQ: " + e.getMessage());
 			return false;
 		}
 	}
@@ -165,7 +171,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 			connection.close();
 			return true;
 		}catch(IOException|TimeoutException e){
-			System.out.println(">>> ERROR! The Message could not be delivered: \n" + e.getMessage());
+			System.out.println(">>> [EVENT MANAGER] ERROR! The Message could not be delivered: \n" + e.getMessage());
 			return false;
 		}
 	}
@@ -174,7 +180,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method receiveMessageFromTemperatureSensor
 	 * @description Receive a message from the Temperature sensor.
 	 */
-	private void receiveMessageFromTemperatureSensor(){
+	private void receiveMessageFromTemperatureController(){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -195,7 +201,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 			channel.close();
 			connection.close();
 		}catch(IOException|TimeoutException e){
-			System.out.println(">>> ERROR! The Message could not be received: \n" + e.getMessage());
+			System.out.println(">>> [EVENT MANAGER] ERROR! The Message could not be received: \n" + e.getMessage());
 		}
 	}
 	
@@ -203,7 +209,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method receiveMessageFromHumiditySensor
 	 * @description Receive a message from the Humidity sensor.
 	 */
-	private void receiveMessageFromHumiditySensor(){
+	private void receiveMessageFromHumidityController(){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -224,27 +230,27 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 			channel.close();
 			connection.close();
 		}catch(IOException|TimeoutException e){
-			System.out.println(">>> ERROR! The Message could not be received: \n" + e.getMessage());
+			System.out.println(">>> [EVENT MANAGER] ERROR! The Message could not be received: \n" + e.getMessage());
 		}
 	}
 
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(1000);
+			System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(">>> INFO! MuMa Software is running.");
-		receiveMessageFromTemperatureSensor();
-		receiveMessageFromHumiditySensor();
+		// receiveMessageFromTemperatureController();
+		// receiveMessageFromHumidityController();
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Exit MuMa Software
 		if(e.getSource()==jmiExit){
-			System.out.println(">>> INFO! Preparing to exit MuMa Software.");
+			System.out.println(">>> [EVENT MANAGER] INFO! Preparing to exit MuMa Software.");
 			System.exit(0);
 		}
 		
@@ -283,5 +289,10 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	public static void main(String[] args){
 		EventManager muma = new EventManager("MuMa Museum: Security Software System");
 		muma.run();
+		
+		HumidityController humidityController = HumidityController.getInstance();
+        humidityController.run();
+		HumiditySensor humiditySensor = HumiditySensor.getInstance();
+        humiditySensor.run();
 	}
 }

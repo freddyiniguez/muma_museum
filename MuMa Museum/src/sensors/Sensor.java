@@ -17,7 +17,18 @@ package sensors;
 import common.Component;
 import event.Event;
 import event.EventManagerInterface;
+
+import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.TimeoutException;
+
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 
 public class Sensor extends Component {
 
@@ -76,4 +87,56 @@ public class Sensor extends Component {
             System.out.println("Error Posting Temperature:: " + e);
         }
     }
+    
+    /**
+	 * @method sendMessage
+	 * @parameter Receives two parameter. The first one is an identifier to the action to take. The second one is a message.
+	 * @return True is the message was correctly sent.
+	 */
+	protected boolean sendMessage(String CHANNEL_SEND_ID, String message){
+		try{
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost("localhost");
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			// Sends the message
+			channel.exchangeDeclare(CHANNEL_SEND_ID, "fanout");
+			channel.basicPublish(CHANNEL_SEND_ID, "", null, message.getBytes("UTF-8"));
+			channel.close();
+			connection.close();
+			return true;
+		}catch(IOException|TimeoutException e){
+			System.out.println(">>> [HUMIDITY SENSOR] ERROR! The Message could not be delivered: \n" + e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * @method receiveMessage
+	 * @parameter Receives the identifier for the HumidityController
+	 * @return True is the message was correctly retrieved.
+	 */
+	protected void receiveMessage(String CHANNEL_HUMIDITY_CONTROLLER_ID){
+		try{
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost("localhost");
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			// Receives the message
+			channel.exchangeDeclare(CHANNEL_HUMIDITY_CONTROLLER_ID, "fanout");
+			channel.queueBind(channel.queueDeclare().getQueue(), CHANNEL_HUMIDITY_CONTROLLER_ID, "");
+			Consumer consumer;
+			consumer = new DefaultConsumer(channel){
+				@Override
+				public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException{
+					System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! I received a message from the Humidity Controller: " + new String(body, "UTF-8"));
+				}
+			};
+			channel.basicConsume(channel.queueDeclare().getQueue(), true, consumer);
+			channel.close();
+			connection.close();
+		}catch(IOException|TimeoutException e){
+			System.out.println(">>> [HUMIDITY SENSOR] ERROR! The Message could not be received: \n" + e.getMessage());
+		}
+	}
 }

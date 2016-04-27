@@ -16,21 +16,28 @@
  */
 package sensors;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import common.Component;
-import event.EventManagerInterface;
 import instrumentation.MessageWindow;
 
 public class HumiditySensor extends Sensor implements Runnable {
-
+	private static final String QUEUE_NAME = "muma";
+	private static final String SENSOR_HUMIDITY_ID = "-4";
+	private static final String CONTROLLER_HUMIDITY_ID = "4";
+	private static final String CHANGE_HUMIDITY_ID = "CH";
     private boolean humidifierState = false;	// Humidifier state: false == off, true == on
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
     private float relativeHumidity;		// Current simulated ambient room humidity
-    
     private static HumiditySensor INSTANCE = new HumiditySensor();
-    
+
     private HumiditySensor(){
     }
 
+    /**
     @Override
     public void run() {
         // Here we check to see if registration worked. If ef is null then the
@@ -66,11 +73,6 @@ public class HumiditySensor extends Sensor implements Runnable {
             messageWin.writeMessage("   Initial Humidity Set:: " + relativeHumidity);
             messageWin.writeMessage("   Drift Value Set:: " + driftValue);
             
-            /**
-             * ******************************************************************
-             ** Here we start the main simulation loop
-             * *******************************************************************
-             */
             messageWin.writeMessage("Beginning Simulation... ");
             while (!isDone) {
                 // Post the current relative humidity
@@ -160,6 +162,25 @@ public class HumiditySensor extends Sensor implements Runnable {
             System.out.println("Unable to register with the event manager.\n\n");
         } 
     }
+    */
+    
+    @Override
+    public void run(){
+    	try {
+			Thread.sleep(1000);
+			// Receives any new message from the controller
+			receiveMessage(CONTROLLER_HUMIDITY_ID);
+			
+			System.out.println(">>> [HUMIDITY SENSOR] INFO! Preparing to send a new message");
+			if(sendMessage(SENSOR_HUMIDITY_ID, "100")){
+				System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! New message was sent.");
+			}else{
+				System.out.println(">>> [HUMIDITY SENSOR] ERROR! A problem was encounter when sending the new message.");
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
     
     private static void createInstance() {
         if (INSTANCE == null) {
@@ -183,17 +204,4 @@ public class HumiditySensor extends Sensor implements Runnable {
         }
         return INSTANCE;
     }
-
-    /**
-     * Start this sensor
-     * 
-     * @param args IP address of the event manager (on command line). 
-     * If blank, it is assumed that the event manager is on the local machine.
-     */
-    public static void main(String args[]) {
-        if(args[0] != null) Component.SERVER_IP = args[0];
-        HumiditySensor sensor = HumiditySensor.getInstance();
-        sensor.run();
-    }
-
 } 

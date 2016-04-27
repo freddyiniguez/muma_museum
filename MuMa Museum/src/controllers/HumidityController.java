@@ -21,31 +21,25 @@
 
 package controllers;
 
-import common.Component;
-import instrumentation.Indicator;
-import instrumentation.MessageWindow;
-
 public class HumidityController extends Controller implements Runnable {
-
+	private static final String QUEUE_NAME = "muma";
+	private static final String SENSOR_HUMIDITY_ID = "-4";
+	private static final String CONTROLLER_HUMIDITY_ID = "4";
+	private static final String CHANGE_HUMIDITY_ID = "CH";
     private boolean humidifierState = false;	// Heater state: false == off, true == on
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
-
     private static HumidityController INSTANCE = new HumidityController();
 
     private HumidityController() {
     }
 
+    /**
     @Override
     public void run() {
         // Here we check to see if registration worked. If em is null then the
         // event manager interface was not properly created.
         if (evtMgrI != null) {
             System.out.println("Registered with the event manager.");
-
-            /* Now we create the humidity control status and message panel
-             ** We put this panel about 2/3s the way down the terminal, aligned to the left
-             ** of the terminal. The status indicators are placed directly under this panel
-             */
             float winPosX = 0.0f; 	//This is the X position of the message window in terms 
             //of a percentage of the screen height
             float winPosY = 0.60f;	//This is the Y position of the message window in terms 
@@ -66,12 +60,6 @@ public class HumidityController extends Controller implements Runnable {
             catch (Exception e) {
                 System.out.println("Error:: " + e);
             }
-
-            /**
-             * ******************************************************************
-             ** Here we start the main simulation loop
-             * *******************************************************************
-             */
             while (!isDone) {
                 try {
                     queue = evtMgrI.getEventQueue();
@@ -174,6 +162,17 @@ public class HumidityController extends Controller implements Runnable {
             System.out.println("Unable to register with the event manager.\n\n");
         }
     }
+    */
+    
+    @Override
+    public void run(){
+    	try {
+			Thread.sleep(1000);
+			receiveMessage(SENSOR_HUMIDITY_ID);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
 
     private static void createInstance() {
         if (INSTANCE == null) {
@@ -196,17 +195,5 @@ public class HumidityController extends Controller implements Runnable {
             createInstance();
         }
         return INSTANCE;
-    }
-
-    /**
-     * Start this controller
-     * 
-     * @param args IP address of the event manager (on command line). 
-     * If blank, it is assumed that the event manager is on the local machine.
-     */
-    public static void main(String args[]) {
-        if(args[0] != null) Component.SERVER_IP = args[0];
-        HumidityController sensor = HumidityController.getInstance();
-        sensor.run();
     }
 }
