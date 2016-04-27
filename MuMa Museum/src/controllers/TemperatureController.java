@@ -180,7 +180,7 @@ public class TemperatureController extends Controller implements Runnable {
     	while(true){
     		try {
     			Thread.sleep(1000);
-    			receiveMessageT(SENSOR_TEMPERATURE_ID);
+    			receiveMessage(SENSOR_TEMPERATURE_ID);
     		} catch (InterruptedException e) {
     			e.printStackTrace();
     		}

@@ -188,7 +188,7 @@ public class EventManager implements Runnable{
 		new Thread(temperatureController).start();
 		
 		TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
-		new Thread().start();;
+		new Thread(temperatureSensor).start();;
 		
 	}
 }
