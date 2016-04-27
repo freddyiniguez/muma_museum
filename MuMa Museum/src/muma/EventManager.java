@@ -21,6 +21,7 @@ import com.rabbitmq.client.Envelope;
 
 import controllers.HumidityController;
 import graphics.MainMenu;
+import controllers.TemperatureController;
 
 import javax.swing.*;
 import java.awt.Desktop;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import sensors.HumiditySensor;
+import sensors.TemperatureSensor;
 import controllers.HumidityController;
 
 
@@ -181,5 +183,12 @@ public class EventManager implements Runnable{
 		
 		HumiditySensor humiditySensor = HumiditySensor.getInstance();
 		new Thread(humiditySensor).start();
+		
+		TemperatureController temperatureController = TemperatureController.getInstance();
+		new Thread(temperatureController).start();
+		
+		TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
+		new Thread().start();;
+		
 	}
 }

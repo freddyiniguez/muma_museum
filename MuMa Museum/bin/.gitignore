@@ -1,4 +1,10 @@
-/muma/
+/.DS_Store
+/Diagrams/
+/common/
 /controllers/
-/sensors/
+/event/
 /graphics/
+/instrumentation/
+/manuals/
+/muma/
+/sensors/
