@@ -11,6 +11,10 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import controllers.HumidityController;
+import sensors.TemperatureSensor;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,6 +29,7 @@ public class MainMenu extends JFrame implements ActionListener {
 	private static final String CHANGE_TEMPERATURE_ID = "CT";
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
+	private static MainMenu INSTANCE = new MainMenu("MuMa Museum: Security Software System");
 	
 	private JMenuBar jmbTopBar;
 	private JMenu jmFile;
@@ -169,5 +174,22 @@ public class MainMenu extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	private static void createInstance() {
+        if (INSTANCE == null) {
+            synchronized (MainMenu.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new MainMenu("MuMa Museum: Security Software System");
+                }
+            }
+        }
+    }
+	
+	public static MainMenu getInstance() {
+		if (INSTANCE == null) {
+            createInstance();
+        }
+        return INSTANCE;
 	}
 }

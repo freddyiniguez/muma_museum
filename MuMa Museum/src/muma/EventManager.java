@@ -49,6 +49,44 @@ public class EventManager implements Runnable{
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
 	
+	private String changeInTemperature;
+	private String changeInHumidity;
+	private String changeInDoor;
+	private String changeInWindow;
+	
+	
+	public String getChangeInTemperature() {
+		return changeInTemperature;
+	}
+
+	public void setChangeInTemperature(String changeInTemperature) {
+		this.changeInTemperature = changeInTemperature;
+	}
+
+	public String getChangeInHumidity() {
+		return changeInHumidity;
+	}
+
+	public void setChangeInHumidity(String changeInHumidity) {
+		this.changeInHumidity = changeInHumidity;
+	}
+
+	public String getChangeInDoor() {
+		return changeInDoor;
+	}
+
+	public void setChangeInDoor(String changeInDoor) {
+		this.changeInDoor = changeInDoor;
+	}
+
+	public String getChangeInWindow() {
+		return changeInWindow;
+	}
+
+	public void setChangeInWindow(String changeInWindow) {
+		this.changeInWindow = changeInWindow;
+	}
+	
 	/**
 	 * @method Constructor
 	 * @description It creates the EventManager responsible for communicate MuMa components.
