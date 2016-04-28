@@ -26,8 +26,11 @@ public class HumidityController extends Controller implements Runnable {
 	private static final String SENSOR_HUMIDITY_ID = "-4";
 	private static final String CONTROLLER_HUMIDITY_ID = "4";
 	private static final String CHANGE_HUMIDITY_ID = "CH";
+	private int minHumidity = 45;				// Minimum Humidity percertage
+	private int maxHumidity = 55;				// Maximum Humidity percentage
     private boolean humidifierState = false;	// Heater state: false == off, true == on
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
+    
     private static HumidityController INSTANCE = new HumidityController();
     
     @Override
@@ -72,4 +75,40 @@ public class HumidityController extends Controller implements Runnable {
         }
         return INSTANCE;
     }
+
+    /**
+     * @method Getters and Setter
+     * @description Getters and Setter methods to obtain the humidity percentage, and the devices (humidifier and dehumifier) status.
+     */
+	public int getMinHumidity() {
+		return minHumidity;
+	}
+
+	public void setMinHumidity(int minHumidity) {
+		this.minHumidity = minHumidity;
+	}
+
+	public int getMaxHumidity() {
+		return maxHumidity;
+	}
+
+	public void setMaxHumidity(int maxHumidity) {
+		this.maxHumidity = maxHumidity;
+	}
+
+	public boolean isHumidifierState() {
+		return humidifierState;
+	}
+
+	public void setHumidifierState(boolean humidifierState) {
+		this.humidifierState = humidifierState;
+	}
+
+	public boolean isDehumidifierState() {
+		return dehumidifierState;
+	}
+
+	public void setDehumidifierState(boolean dehumidifierState) {
+		this.dehumidifierState = dehumidifierState;
+	}    
 }
