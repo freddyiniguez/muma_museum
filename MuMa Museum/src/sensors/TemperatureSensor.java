@@ -82,4 +82,12 @@ public class TemperatureSensor extends Sensor implements Runnable {
     public float getRandomFloat(){
     	return super.getRandomNumber();
     }
+    
+    /**
+     * @method getRandomCoin
+     * @description Returns a randomly-generated true or false
+     */
+    public boolean getRandomCoin(){
+    	return super.coinToss();
+    }
 }

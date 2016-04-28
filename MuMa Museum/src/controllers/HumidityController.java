@@ -1,6 +1,6 @@
 /**
  * **************************************************************************************
- * File:HumidityController.java 
+ * File: HumidityController.java 
  * Course: Software Architecture 
  * Project: Event Architectures
  * Institution: Mathematics Research Center
@@ -12,10 +12,10 @@
  * It polls the event manager for event ids = 4 and reacts to them by turning on or
  * off the humidifier/dehumidifier. The following command are valid strings for
  * controlling the humidifier and dehumidifier. 
- * H1 = humidifier on 
- * H0 = humidifier off 
- * D1 = dehumidifier on 
- * D0 = dehumidifier off
+ * Hu1 = humidifier on 
+ * Hu0 = humidifier off 
+ * De1 = dehumidifier on 
+ * De0 = dehumidifier off
  * **************************************************************************************
  */
 
@@ -24,10 +24,8 @@ package controllers;
 import sensors.HumiditySensor;
 
 public class HumidityController extends Controller implements Runnable {
-	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_HUMIDITY_ID = "-4";
 	private static final String CONTROLLER_HUMIDITY_ID = "4";
-	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private float minHumidity = 45.0F;				// Minimum Humidity percertage
 	private float maxHumidity = 55.0F;				// Maximum Humidity percentage
 	private float currentHumidity = (maxHumidity+minHumidity)/2; // Current humidity
@@ -55,7 +53,7 @@ public class HumidityController extends Controller implements Runnable {
     					public void run(){
     						while(getCurrentHumidity() > ((maxHumidity+minHumidity)/2)){
     							try{
-    								Thread.sleep(500);
+    								Thread.sleep(1000);
     								HumidityController.getInstance().setCurrentHumidity(HumidityController.getInstance().getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
     							}catch(Exception e){
     								e.printStackTrace();
@@ -68,18 +66,31 @@ public class HumidityController extends Controller implements Runnable {
     			}else if(getCurrentHumidity() < 45){	// Humidifier ON
     				sendMessage(CONTROLLER_HUMIDITY_ID, "Hu1");
     				humidifierState = true;
-    				while(getCurrentHumidity() < ((maxHumidity+minHumidity)/2)){
-    					this.setCurrentHumidity(this.getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
-    				}
+    				Thread.sleep(10000);
+    				Thread humidifierThread = new Thread(){
+    					@Override
+    					public void run(){
+    						while(getCurrentHumidity() < ((maxHumidity+minHumidity)/2)){
+    							try{
+    								Thread.sleep(1000);
+    								HumidityController.getInstance().setCurrentHumidity(HumidityController.getInstance().getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
+    							}catch(Exception e){
+    								e.printStackTrace();
+    							}
+    						}
+    					}
+    				};
+    				humidifierThread.start();
     			}else{
-    				// Gets a new value for the humidity
+    				// Gets a new random value for the humidity
     				humidifierState = false;
+    				sendMessage(CONTROLLER_HUMIDITY_ID, "Hu0");
     				dehumidifierState = false;
+    				sendMessage(CONTROLLER_HUMIDITY_ID, "De0");
     				if(HumiditySensor.getInstance().getRandomCoin()){
     					this.setCurrentHumidity(this.getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
     				}else{
-    					// this.setCurrentHumidity(this.getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
-    					;
+    					//this.setCurrentHumidity(this.getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
     				}
     			}
     		} catch (InterruptedException e) {

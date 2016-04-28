@@ -1,3 +1,18 @@
+/**
+ * **************************************************************************************
+ * File: MainMenu.java 
+ * Course: Software Architecture 
+ * Project: Event Architectures
+ * Institution: Mathematics Research Center
+ * Date: April 2016
+ * Developer: José Luis Blanco Aguirre, Freddy Íñiguez López, Carlos Adrian Naal Avila
+ * Reviewer: Dra. Perla Velasco Elizondo
+ * **************************************************************************************
+ * This class is responsible to update all devices connected to MuMa Software and its 
+ * values, like temperature degrees or humidity percentage.
+ * **************************************************************************************
+ */
+
 package graphics;
 
 import java.awt.BorderLayout;
@@ -7,14 +22,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import controllers.HumidityController;
-import sensors.TemperatureSensor;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,12 +32,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MainMenu extends JFrame implements ActionListener {
-	private static final String SENSOR_TEMPERATURE_ID = "-5";
-	private static final String SENSOR_HUMIDITY_ID = "-4";
-	private static final String CONTROLLER_TEMPERATURE_ID = "5";
-	private static final String CONTROLLER_HUMIDITY_ID = "4";
-	private static final String CHANGE_TEMPERATURE_ID = "CT";
-	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
 	private static MainMenu INSTANCE = new MainMenu();
 	

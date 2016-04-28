@@ -11,10 +11,7 @@ package muma;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
@@ -24,30 +21,16 @@ import graphics.MainMenu;
 import controllers.TemperatureController;
 
 import javax.swing.*;
-import java.awt.Desktop;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import sensors.BrokenDoorSensor;
-import sensors.BrokenWindowSensor;
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
-import controllers.HumidityController;
-
 
 public class EventManager implements Runnable{
 	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_TEMPERATURE_ID = "-5";
 	private static final String SENSOR_HUMIDITY_ID = "-4";
-	private static final String CONTROLLER_TEMPERATURE_ID = "5";
-	private static final String CONTROLLER_HUMIDITY_ID = "4";
-	private static final String CHANGE_TEMPERATURE_ID = "CT";
-	private static final String CHANGE_HUMIDITY_ID = "CH";
-	private static final long serialVersionUID = 1L;
 	
 	private static MainMenu mmMuma = MainMenu.getInstance();
 	private static TemperatureController temperatureController = TemperatureController.getInstance();
@@ -213,7 +196,7 @@ public class EventManager implements Runnable{
 		System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 		while(true){
 			try{
-				Thread.sleep(1000);
+				Thread.sleep(20);
 				// Update all the devices state and its measurements
 				if (humidityController.isHumidifierState()){
 					mmMuma.updateDevices("Hu1");
@@ -224,6 +207,17 @@ public class EventManager implements Runnable{
 					mmMuma.updateDevices("De1");
 				}else{
 					mmMuma.updateDevices("De0");
+				}
+				
+				if(temperatureController.isChillerState()){
+					mmMuma.updateDevices("Ch1");
+				}else{
+					mmMuma.updateDevices("Ch0");
+				}
+				if(temperatureController.isHeaterState()){
+					mmMuma.updateDevices("He1");
+				}else{
+					mmMuma.updateDevices("He0");
 				}
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
@@ -240,6 +234,7 @@ public class EventManager implements Runnable{
 	 * @method main
 	 */
 	public static void main(String[] args){
+		@SuppressWarnings("unused")
 		MainMenu mmMuma = MainMenu.getInstance();
 		new Thread(new EventManager()).start();
 		
