@@ -29,7 +29,7 @@ public class MainMenu extends JFrame implements ActionListener {
 	private static final String CHANGE_TEMPERATURE_ID = "CT";
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
-	private static MainMenu INSTANCE = new MainMenu("MuMa Museum: Security Software System");
+	private static MainMenu INSTANCE = new MainMenu();
 	
 	private JMenuBar jmbTopBar;
 	private JMenu jmFile;
@@ -41,6 +41,10 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JLabel jlDehumidifier;
 	private JLabel jlChiller;
 	private JLabel jlHeater;
+	private JLabel jlHumidifierMeasure;
+	private JLabel jlDehumidifierMeasure;
+	private JLabel jlChillerMeasure;
+	private JLabel jlHeaterMeasure;
 	private JTextField jtfHumidifier;
 	private JTextField jtfDehumifier;
 	private JTextField jtfChiller;
@@ -50,8 +54,8 @@ public class MainMenu extends JFrame implements ActionListener {
 	 * @method Constructor
 	 * @parameter Receives the title of the Window
 	 */
-	public MainMenu(String windowTitle){
-		super(windowTitle);
+	public MainMenu(){
+		super("MuMa Museum: Security Software System");
 		createsWindow();
 	}
 	
@@ -85,35 +89,43 @@ public class MainMenu extends JFrame implements ActionListener {
 		this.setResizable(false);
 		
 		jlHumidifier = new JLabel("Humidifier", JLabel.CENTER);
+		jlHumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
 		jtfHumidifier = new JTextField("");
 		jtfHumidifier.setBackground(Color.GRAY);
 		JPanel firstQuarter = new JPanel(new BorderLayout());
 		firstQuarter.add(jlHumidifier, BorderLayout.NORTH);
 		firstQuarter.add(jtfHumidifier, BorderLayout.CENTER);
+		firstQuarter.add(jlHumidifierMeasure, BorderLayout.SOUTH);
 		this.add(firstQuarter);
 		
 		jlDehumidifier = new JLabel("Dehumidifier", JLabel.CENTER);
+		jlDehumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
 		jtfDehumifier = new JTextField("");
 		jtfDehumifier.setBackground(Color.GRAY);
 		JPanel secondQuarter = new JPanel(new BorderLayout());
 		secondQuarter.add(jlDehumidifier, BorderLayout.NORTH);
 		secondQuarter.add(jtfDehumifier, BorderLayout.CENTER);
+		secondQuarter.add(jlDehumidifierMeasure, BorderLayout.SOUTH);
 		this.add(secondQuarter);
 		
 		jlChiller = new JLabel("Chiller", JLabel.CENTER);
+		jlChillerMeasure = new JLabel("Initializing...", JLabel.CENTER);
 		jtfChiller = new JTextField("");
 		jtfChiller.setBackground(Color.GRAY);
 		JPanel thirdQuarter = new JPanel(new BorderLayout());
 		thirdQuarter.add(jlChiller, BorderLayout.NORTH);
 		thirdQuarter.add(jtfChiller, BorderLayout.CENTER);
+		thirdQuarter.add(jlChillerMeasure, BorderLayout.SOUTH);
 		this.add(thirdQuarter);
 		
 		jlHeater = new JLabel("Heater", JLabel.CENTER);
+		jlHeaterMeasure = new JLabel("Initializing...", JLabel.CENTER);
 		jtfHeater = new JTextField("");
 		jtfHeater.setBackground(Color.GRAY);
 		JPanel fourthQuarter = new JPanel(new BorderLayout());
 		fourthQuarter.add(jlHeater, BorderLayout.NORTH);
 		fourthQuarter.add(jtfHeater, BorderLayout.CENTER);
+		fourthQuarter.add(jlHeaterMeasure, BorderLayout.SOUTH);
 		this.add(fourthQuarter);
 		
 		this.setVisible(true);
@@ -180,7 +192,7 @@ public class MainMenu extends JFrame implements ActionListener {
         if (INSTANCE == null) {
             synchronized (MainMenu.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new MainMenu("MuMa Museum: Security Software System");
+                    INSTANCE = new MainMenu();
                 }
             }
         }
@@ -191,5 +203,19 @@ public class MainMenu extends JFrame implements ActionListener {
             createInstance();
         }
         return INSTANCE;
+	}
+	
+	/**
+	 * @method Setters
+	 * @description Setters methods to update the devices information.
+	 */
+	public void setHumidity(String humidityMeasure){
+		this.jlHumidifierMeasure.setText("Humidity: " + humidityMeasure + "%");
+		this.jlDehumidifierMeasure.setText("Humidity: " + humidityMeasure + "%");
+	}
+	
+	public void setTemperature(String temperatureMeasure){
+		this.jlHeaterMeasure.setText("Temperature: " + temperatureMeasure + "ºF");
+		this.jlChillerMeasure.setText("Temperature: " + temperatureMeasure + "ºF");
 	}
 }

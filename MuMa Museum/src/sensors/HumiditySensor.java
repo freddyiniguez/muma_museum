@@ -33,8 +33,6 @@ public class HumiditySensor extends Sensor implements Runnable {
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
     private float relativeHumidity;		// Current simulated ambient room humidity
     private static HumiditySensor INSTANCE = new HumiditySensor();
-
-    
     
     @Override
     public void run(){
@@ -77,5 +75,21 @@ public class HumiditySensor extends Sensor implements Runnable {
             createInstance();
         }
         return INSTANCE;
+    }
+    
+    /**
+     * @method getRandomFloat()
+     * @description Returns a randomly-generated number between 0 and 1
+     */
+    public float getRandomFloat(){
+    	return super.getRandomNumber();
+    }
+    
+    /**
+     * @method getRandomCoin
+     * @description Returns a randomly-generated true or false
+     */
+    public boolean getRandomCoin(){
+    	return super.coinToss();
     }
 } 

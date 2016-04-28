@@ -24,14 +24,17 @@ package controllers;
 import common.Component;
 import instrumentation.Indicator;
 import instrumentation.MessageWindow;
+import sensors.HumiditySensor;
+import sensors.TemperatureSensor;
 
 public class TemperatureController extends Controller implements Runnable {
 	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_TEMPERATURE_ID = "-5";
 	private static final String CONTROLLER_TEMPERATURE_ID = "5";
 	private static final String CHANGE_HUMIDITY_ID = "CH";
-	private int minTemperature = 70;		// Minimum Fahrenheit degrees
-	private int maxTemperature = 75; 		// Maximum Fahrenheit degrees
+	private float minTemperature = 70;		// Minimum Fahrenheit degrees
+	private float maxTemperature = 75; 		// Maximum Fahrenheit degrees
+	private float currentTemperature = minTemperature; // Current Fahrenheit degrees
     private boolean heaterState = false;	// Heater state: false == off, true == on
     private boolean chillerState = false;	// Chiller state: false == off, true == on
     
@@ -43,6 +46,8 @@ public class TemperatureController extends Controller implements Runnable {
     		try {
     			Thread.sleep(1000);
     			receiveMessage(SENSOR_TEMPERATURE_ID);
+    			// Simulate an increase of the temperature
+    			this.setCurrentTemperature(TemperatureSensor.getInstance().getRandomFloat());
     		} catch (InterruptedException e) {
     			e.printStackTrace();
     		}
@@ -76,7 +81,7 @@ public class TemperatureController extends Controller implements Runnable {
      * @method Getters and Setter
      * @description Getters and Setter methods to obtain the temperature degrees, and the devices (chiller and heater) status.
      */
-	public int getMinTemperature() {
+	public float getMinTemperature() {
 		return minTemperature;
 	}
 
@@ -84,12 +89,20 @@ public class TemperatureController extends Controller implements Runnable {
 		this.minTemperature = minTemperature;
 	}
 
-	public int getMaxTemperature() {
+	public float getMaxTemperature() {
 		return maxTemperature;
 	}
 
 	public void setMaxTemperature(int maxTemperature) {
 		this.maxTemperature = maxTemperature;
+	}
+	
+	public float getCurrentTemperature(){
+		return currentTemperature;
+	}
+	
+	public void setCurrentTemperature(float currentTemperature){
+		this.currentTemperature = currentTemperature;
 	}
 
 	public boolean isHeaterState() {

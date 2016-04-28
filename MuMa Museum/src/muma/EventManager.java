@@ -49,6 +49,12 @@ public class EventManager implements Runnable{
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
 	
+	private static MainMenu mmMuma = MainMenu.getInstance();
+	private static TemperatureController temperatureController = TemperatureController.getInstance();
+	private static TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
+	private static HumidityController humidityController = HumidityController.getInstance();
+	private static HumiditySensor humiditySensor = HumiditySensor.getInstance();
+	
 	private String changeInTemperature;
 	private String changeInHumidity;
 	private String changeInDoor;
@@ -206,8 +212,27 @@ public class EventManager implements Runnable{
 	public void run() {
 		System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 		while(true){
-			// receiveMessageFromTemperatureController();
-			// receiveMessageFromHumidityController();
+			try{
+				Thread.sleep(1000);
+				// Update all the devices state and its measurements
+				if (humidityController.isHumidifierState()){
+					mmMuma.updateDevices("Hu1");
+				}else{
+					mmMuma.updateDevices("Hu0");
+				}
+				if(humidityController.isDehumidifierState()){
+					mmMuma.updateDevices("De1");
+				}else{
+					mmMuma.updateDevices("De0");
+				}
+				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
+				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
+				
+				// receiveMessageFromTemperatureController();
+				// receiveMessageFromHumidityController();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -215,28 +240,19 @@ public class EventManager implements Runnable{
 	 * @method main
 	 */
 	public static void main(String[] args){
-		MainMenu mainMenu = new MainMenu("MuMa Museum: Security Software System");
+		MainMenu mmMuma = MainMenu.getInstance();
 		new Thread(new EventManager()).start();
 		
-		HumidityController humidityController = HumidityController.getInstance();
+		humidityController = HumidityController.getInstance();
 		new Thread(humidityController).start();
 		
-		HumiditySensor humiditySensor = HumiditySensor.getInstance();
+		humiditySensor = HumiditySensor.getInstance();
 		new Thread(humiditySensor).start();
-		
 
-		BrokenWindowSensor  windowSensor = BrokenWindowSensor.getInstance();
-		new Thread(windowSensor).start();
-		
-		BrokenDoorSensor doorSensor = BrokenDoorSensor.getInstance();
-		new Thread(doorSensor).start();
-
-		TemperatureController temperatureController = TemperatureController.getInstance();
+		temperatureController = TemperatureController.getInstance();
 		new Thread(temperatureController).start();
 		
-		TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
-		new Thread(temperatureSensor).start();;
-		
-
+		temperatureSensor = TemperatureSensor.getInstance();
+		new Thread(temperatureSensor).start();
 	}
 }

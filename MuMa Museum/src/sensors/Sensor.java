@@ -56,7 +56,7 @@ public class Sensor extends Component {
             val = r.nextFloat();
         }
         return (val.floatValue());
-    } // GetRandomNumber
+    }
 
     /**
      * This method provides a random true or
@@ -68,7 +68,7 @@ public class Sensor extends Component {
     protected boolean coinToss() {
         Random r = new Random();
         return (r.nextBoolean());
-    } // CoinToss
+    }
 
     /**
      * This method posts the specified temperature value to the specified event

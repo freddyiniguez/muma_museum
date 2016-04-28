@@ -21,13 +21,16 @@
 
 package controllers;
 
+import sensors.HumiditySensor;
+
 public class HumidityController extends Controller implements Runnable {
 	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_HUMIDITY_ID = "-4";
 	private static final String CONTROLLER_HUMIDITY_ID = "4";
 	private static final String CHANGE_HUMIDITY_ID = "CH";
-	private int minHumidity = 45;				// Minimum Humidity percertage
-	private int maxHumidity = 55;				// Maximum Humidity percentage
+	private float minHumidity = 45.0F;				// Minimum Humidity percertage
+	private float maxHumidity = 55.0F;				// Maximum Humidity percentage
+	private float currentHumidity = (maxHumidity+minHumidity)/2; // Current humidity
     private boolean humidifierState = false;	// Heater state: false == off, true == on
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
     
@@ -38,14 +41,46 @@ public class HumidityController extends Controller implements Runnable {
     	while(true){
     		try {
     			Thread.sleep(delay);
+    			
     			// Receives a message from the humidity sensor
     			receiveMessage(SENSOR_HUMIDITY_ID);
     			
-    			// Sends a message to the humidity sensor
-    			if(sendMessage(CONTROLLER_HUMIDITY_ID, "H1")){
-    				System.out.println(">>> [HUMIDITY CONTROLLER] SUCCESS! New message was sent.");
+    			// Sends a message according to the values of the humidity device
+    			if(getCurrentHumidity() > 55){			// Dehumidifier ON
+    				sendMessage(CONTROLLER_HUMIDITY_ID, "De1");
+    				dehumidifierState = true;
+    				Thread.sleep(10000);
+    				Thread dehumidifierThread = new Thread(){
+    					@Override
+    					public void run(){
+    						while(getCurrentHumidity() > ((maxHumidity+minHumidity)/2)){
+    							try{
+    								Thread.sleep(500);
+    								HumidityController.getInstance().setCurrentHumidity(HumidityController.getInstance().getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
+    							}catch(Exception e){
+    								e.printStackTrace();
+    							}
+    						}
+    					}
+    				};
+    				dehumidifierThread.start();
+    				
+    			}else if(getCurrentHumidity() < 45){	// Humidifier ON
+    				sendMessage(CONTROLLER_HUMIDITY_ID, "Hu1");
+    				humidifierState = true;
+    				while(getCurrentHumidity() < ((maxHumidity+minHumidity)/2)){
+    					this.setCurrentHumidity(this.getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
+    				}
     			}else{
-    				System.out.println(">>> [HUMIDITY CONTROLLER] ERROR! A problem was encounter when sending the new message.");
+    				// Gets a new value for the humidity
+    				humidifierState = false;
+    				dehumidifierState = false;
+    				if(HumiditySensor.getInstance().getRandomCoin()){
+    					this.setCurrentHumidity(this.getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
+    				}else{
+    					// this.setCurrentHumidity(this.getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
+    					;
+    				}
     			}
     		} catch (InterruptedException e) {
     			e.printStackTrace();
@@ -80,7 +115,7 @@ public class HumidityController extends Controller implements Runnable {
      * @method Getters and Setter
      * @description Getters and Setter methods to obtain the humidity percentage, and the devices (humidifier and dehumifier) status.
      */
-	public int getMinHumidity() {
+	public float getMinHumidity() {
 		return minHumidity;
 	}
 
@@ -88,12 +123,20 @@ public class HumidityController extends Controller implements Runnable {
 		this.minHumidity = minHumidity;
 	}
 
-	public int getMaxHumidity() {
+	public float getMaxHumidity() {
 		return maxHumidity;
 	}
 
 	public void setMaxHumidity(int maxHumidity) {
 		this.maxHumidity = maxHumidity;
+	}
+	
+	public float getCurrentHumidity(){
+		return currentHumidity;
+	}
+	
+	public void setCurrentHumidity(float currentHumidity){
+		this.currentHumidity = currentHumidity;
 	}
 
 	public boolean isHumidifierState() {
