@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import sensors.BrokenDoorSensor;
+import sensors.BrokenWindowSensor;
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
 import controllers.HumidityController;
@@ -184,11 +186,19 @@ public class EventManager implements Runnable{
 		HumiditySensor humiditySensor = HumiditySensor.getInstance();
 		new Thread(humiditySensor).start();
 		
+
+		BrokenWindowSensor  windowSensor = BrokenWindowSensor.getInstance();
+		new Thread(windowSensor).start();
+		
+		BrokenDoorSensor doorSensor = BrokenDoorSensor.getInstance();
+		new Thread(doorSensor).start();
+
 		TemperatureController temperatureController = TemperatureController.getInstance();
 		new Thread(temperatureController).start();
 		
 		TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
 		new Thread(temperatureSensor).start();;
 		
+
 	}
 }
