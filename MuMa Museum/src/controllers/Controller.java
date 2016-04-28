@@ -14,6 +14,7 @@
  */
 package controllers;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -33,8 +34,8 @@ public class Controller extends Component {
     protected int delay = 2500;				// The loop delay (2.5 seconds)
     protected boolean isDone = false;			// Loop termination flag
     private static final String QUEUE_NAME = "muma";
-    String outputMessage = "";
-    String errorMessage = "";
+    private String outputMessage = "";
+    private String errorMessage = "";
     
     protected Controller() {
         super();
@@ -65,7 +66,6 @@ public class Controller extends Component {
 	 * @return True is the message was correctly sent.
 	 */
 	protected boolean sendMessage(String CHANNEL_SEND_ID, String message){
-		
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -93,7 +93,7 @@ public class Controller extends Component {
 				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 				default:
-					break;
+					;
 			}
 			System.out.println(errorMessage + e.getMessage());
 			errorMessage = "";
@@ -123,15 +123,17 @@ public class Controller extends Component {
 				break;
 			case 5:
 				outputMessage = ">>> [TEMPERATURE CONTROLLER] SUCCESS! I received a message from the Temperature Sensor: ";
+				break;
 			case 6:
 				outputMessage = ">>> [DOOR CONTROLLER] SUCCESS! I received a message from the Door Sensor: ";
+				break;
 			case 7:
 				outputMessage = ">>> [WINDOW CONTROLLER] SUCCESS! I received a message from the Window Sensor: ";
-			default:
 				break;
+			default:
+				;
 			}
 			consumer = new DefaultConsumer(channel){
-				
 				@Override
 				public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException{
 					System.out.println(outputMessage + new String(body, "UTF-8"));
@@ -156,11 +158,10 @@ public class Controller extends Component {
 				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 				default:
-					break;
+					errorMessage = ">>> ERROR! The message could not be delivered: ";
 			}
 			System.out.println(errorMessage + e.getMessage());
 			errorMessage = "";
-			
 		}
 	}
 }

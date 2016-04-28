@@ -11,14 +11,11 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import muma.EventManager;
 
 public class MainMenu extends JFrame implements ActionListener {
 	private static final String SENSOR_TEMPERATURE_ID = "-5";
@@ -43,7 +40,6 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JTextField jtfDehumifier;
 	private JTextField jtfChiller;
 	private JTextField jtfHeater;
-	
 	
 	/**
 	 * @method Constructor

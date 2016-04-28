@@ -39,7 +39,7 @@ public class HumidityController extends Controller implements Runnable {
     			receiveMessage(SENSOR_HUMIDITY_ID);
     			
     			// Sends a message to the humidity sensor
-    			if(sendMessage(CONTROLLER_HUMIDITY_ID, "50")){
+    			if(sendMessage(CONTROLLER_HUMIDITY_ID, "H1")){
     				System.out.println(">>> [HUMIDITY CONTROLLER] SUCCESS! New message was sent.");
     			}else{
     				System.out.println(">>> [HUMIDITY CONTROLLER] ERROR! A problem was encounter when sending the new message.");

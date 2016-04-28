@@ -174,7 +174,7 @@ public class TemperatureSensor extends Sensor implements Runnable {
     			// Receives any new message from the temperature controller
     			receiveMessage(CONTROLLER_TEMPERATURE_ID);
     			
-    			if(sendMessage(SENSOR_TEMPERATURE_ID, "100")){
+    			if(sendMessage(SENSOR_TEMPERATURE_ID, "Ch1")){
     				System.out.println(">>> [TEMPERATURE SENSOR] SUCCESS! New message was sent.");
     			}else{
     				System.out.println(">>> [TEMPERATURE SENSOR] ERROR! A problem was encounter when sending the new message.");
