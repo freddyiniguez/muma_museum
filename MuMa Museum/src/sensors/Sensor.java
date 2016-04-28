@@ -123,6 +123,7 @@ public class Sensor extends Component {
 					break;
 				case 7:
 					errorMessage = ">>> [WINDOW SENSOR] ERROR! The Message could not be delivered: ";
+					break;
 				default:
 					break;
 			}
@@ -155,11 +156,15 @@ public class Sensor extends Component {
 				break;
 			case 5:
 				outputMessage = ">>> [TEMPERATURE SENSOR] SUCCESS! I received a message from the Temperature Controller: ";
+				break;
 			case 6:
 				outputMessage = ">>> [DOOR SENSOR] SUCCESS! I received a message from the Door Controller: ";
+				break;
 			case 7:
 				outputMessage = ">>> [WINDOW SENSOR] SUCCESS! I received a message from the Window Controller: ";
+				break;
 			default:
+				outputMessage = ">>> [SENSOR WARNING!] Code Unknown";
 				break;
 			}
 			consumer = new DefaultConsumer(channel){
@@ -186,7 +191,9 @@ public class Sensor extends Component {
 					break;
 				case 7:
 					errorMessage = ">>> [WINDOW SENSOR] ERROR! The Message could not be delivered: ";
+					break;
 				default:
+					errorMessage = ">>> ERROR! The message could not be delivered: ";
 					break;
 			}
 			System.out.println(errorMessage + e.getMessage());

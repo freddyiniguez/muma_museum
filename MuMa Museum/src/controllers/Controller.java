@@ -92,8 +92,9 @@ public class Controller extends Component {
 					break;
 				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
 				default:
-					;
+					break;
 			}
 			System.out.println(errorMessage + e.getMessage());
 			errorMessage = "";
@@ -131,7 +132,8 @@ public class Controller extends Component {
 				outputMessage = ">>> [WINDOW CONTROLLER] SUCCESS! I received a message from the Window Sensor: ";
 				break;
 			default:
-				;
+				outputMessage = ">>> [CONTROLLER WARNING!] Code Unknown";
+				break;
 			}
 			consumer = new DefaultConsumer(channel){
 				@Override
@@ -157,8 +159,10 @@ public class Controller extends Component {
 					break;
 				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
 				default:
 					errorMessage = ">>> ERROR! The message could not be delivered: ";
+					break;
 			}
 			System.out.println(errorMessage + e.getMessage());
 			errorMessage = "";
