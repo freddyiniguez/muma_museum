@@ -24,15 +24,18 @@ import com.rabbitmq.client.ConnectionFactory;
 import common.Component;
 import instrumentation.MessageWindow;
 
-public class HumiditySensor extends Sensor implements Runnable {
+public class BrokenWindowSensor extends Sensor implements Runnable {
 	private static final String QUEUE_NAME = "muma";
-	private static final String SENSOR_HUMIDITY_ID = "-4";
-	private static final String CONTROLLER_HUMIDITY_ID = "4";
-	private static final String CHANGE_HUMIDITY_ID = "CH";
+	private static final String WINDOW_SENSOR_ID = "-7";
+	private static final String WINDOW_CONTROLLER_ID = "7";
+	private static final String WINDOW_STATUS_ID = "WB";
     private boolean humidifierState = false;	// Humidifier state: false == off, true == on
     private boolean dehumidifierState = false;	// Dehumidifier state: false == off, true == on
     private float relativeHumidity;		// Current simulated ambient room humidity
-    private static HumiditySensor INSTANCE = new HumiditySensor();
+    private static BrokenWindowSensor INSTANCE = new BrokenWindowSensor();
+
+    private BrokenWindowSensor(){
+    }
 
     /**
     @Override
@@ -165,15 +168,14 @@ public class HumiditySensor extends Sensor implements Runnable {
     public void run(){
     	while(true){
     		try {
-    			Thread.sleep(delay);
-    			// Receives a message from the humidity controller
-    			receiveMessage(CONTROLLER_HUMIDITY_ID);
+    			Thread.sleep(1000);
+    			// Receives any new message from the controller
+    			receiveMessage(WINDOW_CONTROLLER_ID);
     			
-    			// Sends a message to the humidity controller
-    			if(sendMessage(SENSOR_HUMIDITY_ID, "100")){
-    				System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! New message was sent.");
+    			if(sendMessage(WINDOW_SENSOR_ID, "100")){
+    				System.out.println(">>> [WINDOW SENSOR] New message was sent.");
     			}else{
-    				System.out.println(">>> [HUMIDITY SENSOR] ERROR! A problem was encounter when sending the new message.");
+    				System.out.println(">>> [WINDOW SENSOR] ERROR! A problem was encounter when sending the new message.");
     			}
     		} catch (InterruptedException e) {
     			e.printStackTrace();
@@ -183,9 +185,9 @@ public class HumiditySensor extends Sensor implements Runnable {
     
     private static void createInstance() {
         if (INSTANCE == null) {
-            synchronized (HumiditySensor.class) {
+            synchronized (BrokenWindowSensor.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new HumiditySensor();
+                    INSTANCE = new BrokenWindowSensor();
                 }
             }
         }
@@ -197,7 +199,7 @@ public class HumiditySensor extends Sensor implements Runnable {
      * 
      * @return The instance of this class.
      */
-    public static HumiditySensor getInstance() {
+    public static BrokenWindowSensor getInstance() {
         if (INSTANCE == null) {
             createInstance();
         }

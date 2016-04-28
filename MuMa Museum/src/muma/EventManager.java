@@ -20,6 +20,8 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 import controllers.HumidityController;
+import graphics.MainMenu;
+import controllers.TemperatureController;
 
 import javax.swing.*;
 import java.awt.Desktop;
@@ -33,10 +35,11 @@ import java.util.concurrent.TimeoutException;
 import sensors.BrokenDoorSensor;
 import sensors.BrokenWindowSensor;
 import sensors.HumiditySensor;
+import sensors.TemperatureSensor;
 import controllers.HumidityController;
 
 
-public class EventManager extends JFrame implements Runnable, ActionListener{
+public class EventManager implements Runnable{
 	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_TEMPERATURE_ID = "-5";
 	private static final String SENSOR_HUMIDITY_ID = "-4";
@@ -46,95 +49,20 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	private static final String CHANGE_HUMIDITY_ID = "CH";
 	private static final long serialVersionUID = 1L;
 	
-	private JMenuBar jmbTopBar;
-	private JMenu jmFile;
-	private JMenu jmHelp;
-	private JMenuItem jmiExit;
-	private JMenuItem jmiAbout;
-	private JMenuItem jmiUserManual;
-	private JLabel jlTemperature;
-	private JTextField jtfTemperature;
-	private JButton jbTemperature;
-	private JLabel jlHumidity;
-	private JTextField jtfHumidity;
-	private JButton jbHumidity;
-	
 	/**
 	 * @method Constructor
 	 * @description It creates the EventManager responsible for communicate MuMa components.
 	 */
 	public EventManager(){
 		if (connectToRabbit()){
-			System.out.println(">>> SUCCESS! The connection with RabbitMQ was successfully.");
+			System.out.println(">>> [EVENT MANAGER] SUCCESS! The connection with RabbitMQ was successfully.");
 		}else{
-			JOptionPane.showMessageDialog(null, "In order to execute MuMa Software, you must start RabbitMQ first.", "Error initializing MuMa Software", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, 
+					"In order to execute MuMa Software, you must start RabbitMQ first.", 
+					"Error initializing MuMa Software", 
+					JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
-	}
-	
-	/**
-	 * @method Constructor
-	 * @description It creates the EventManager responsible for communicate MuMa components.
-	 * @parameter Receives the name of the window.
-	 */
-	public EventManager(String windowTitle){
-		if (connectToRabbit()){
-			System.out.println(">>> SUCCESS! The connection with RabbitMQ was successfully.");
-		}else{
-			JOptionPane.showMessageDialog(null, "In order to execute MuMa Software, you must start RabbitMQ first.", "Error initializing MuMa Software", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-		createsWindow(windowTitle);
-	}
-	
-	/**
-	 * @method createsWindow
-	 * @description It creates the EventManager responsible for communicate MuMa components.
-	 * @parameter Receives the title of the window.
-	 */
-	private void createsWindow(String windowTitle){
-		jmbTopBar = new JMenuBar();
-		jmFile = new JMenu("File");
-		jmiExit = new JMenuItem("Exit");
-		jmiExit.addActionListener(this);
-		jmFile.add(jmiExit);
-		jmbTopBar.add(jmFile);
-		
-		jmHelp = new JMenu("Help");
-		jmiAbout = new JMenuItem("About Muma");
-		jmiAbout.addActionListener(this);
-		jmiUserManual = new JMenuItem("See User Manual");
-		jmiUserManual.addActionListener(this);
-		jmHelp.add(jmiUserManual);
-		jmHelp.addSeparator();
-		jmHelp.add(jmiAbout);
-		jmbTopBar.add(jmHelp);
-		
-		this.setJMenuBar(jmbTopBar);
-		this.setTitle(windowTitle);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(600,600);
-		this.setLayout(new GridLayout(2,3));
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-		
-		jlTemperature = new JLabel("Temperature");
-		jtfTemperature = new JTextField("Temperature");
-		jbTemperature = new JButton("Change Temperature");
-		jbTemperature.addActionListener(this);
-		this.add(jlTemperature);
-		this.add(jtfTemperature);
-		this.add(jbTemperature);
-		
-		jlHumidity = new JLabel("Humidity");
-		jtfHumidity = new JTextField("Humidity");
-		jbHumidity = new JButton("Change Humidity");
-		jbHumidity.addActionListener(this);
-		this.add(jlHumidity);
-		this.add(jtfHumidity);
-		this.add(jbHumidity);
-		
-		// this.setVisible(true);
 	}
 	
 	/**
@@ -160,7 +88,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @parameter Receives two parameter. The first one is an identifier to the action to take. The second one is a message.
 	 * @return True is the message was correctly sent.
 	 */
-	private boolean sendMessage(String CHANNEL_SEND_ID, String message){
+	public boolean sendMessage(String CHANNEL_SEND_ID, String message){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -182,7 +110,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method receiveMessageFromTemperatureSensor
 	 * @description Receive a message from the Temperature sensor.
 	 */
-	private void receiveMessageFromTemperatureController(){
+	protected void receiveMessageFromTemperatureController(){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -211,7 +139,7 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method receiveMessageFromHumiditySensor
 	 * @description Receive a message from the Humidity sensor.
 	 */
-	private void receiveMessageFromHumidityController(){
+	protected void receiveMessageFromHumidityController(){
 		try{
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -240,50 +168,8 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	public void run() {
 		System.out.println(">>> [EVENT MANAGER] INFO! MuMa Software is running.");
 		while(true){
-			try {
-				Thread.sleep(1000);
-				// receiveMessageFromTemperatureController();
-				// receiveMessageFromHumidityController();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// Exit MuMa Software
-		if(e.getSource()==jmiExit){
-			System.out.println(">>> [EVENT MANAGER] INFO! Preparing to exit MuMa Software.");
-			System.exit(0);
-		}
-		
-		// Open the User Manual
-		if(e.getSource()==jmiUserManual){
-			try {
-				Desktop.getDesktop().open(new File("src/manuals/userManual.pdf"));
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-		
-		// Change Temperature
-		if (e.getSource()==jbTemperature){
-			if (sendMessage(CHANGE_TEMPERATURE_ID, jtfTemperature.getText())){
-				System.out.println(">>> INFO! The temperature has changed.");
-			}else{
-				System.out.println(">>> ERROR! There was an error changing the temperature.");
-			}
-		}
-		
-		// Change Humidity
-		if (e.getSource()==jbHumidity){
-			if(sendMessage(CONTROLLER_HUMIDITY_ID, jtfHumidity.getText())){
-				System.out.println(">>> INFO! The humidity has changed.");
-			}else{
-				System.out.println(">>> ERROR! There was an error changing the humidity");
-			}
+			// receiveMessageFromTemperatureController();
+			// receiveMessageFromHumidityController();
 		}
 	}
 	
@@ -291,7 +177,8 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 	 * @method main
 	 */
 	public static void main(String[] args){
-		new Thread(new EventManager("MuMa Museum: Security Software System")).start();
+		MainMenu mainMenu = new MainMenu("MuMa Museum: Security Software System");
+		new Thread(new EventManager()).start();
 		
 		HumidityController humidityController = HumidityController.getInstance();
 		new Thread(humidityController).start();
@@ -299,10 +186,19 @@ public class EventManager extends JFrame implements Runnable, ActionListener{
 		HumiditySensor humiditySensor = HumiditySensor.getInstance();
 		new Thread(humiditySensor).start();
 		
+
 		BrokenWindowSensor  windowSensor = BrokenWindowSensor.getInstance();
 		new Thread(windowSensor).start();
 		
 		BrokenDoorSensor doorSensor = BrokenDoorSensor.getInstance();
 		new Thread(doorSensor).start();
+
+		TemperatureController temperatureController = TemperatureController.getInstance();
+		new Thread(temperatureController).start();
+		
+		TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
+		new Thread(temperatureSensor).start();;
+		
+
 	}
 }

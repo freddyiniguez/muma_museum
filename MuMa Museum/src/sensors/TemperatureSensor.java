@@ -21,6 +21,11 @@ import instrumentation.MessageWindow;
 
 public class TemperatureSensor extends Sensor implements Runnable {
 
+	private static final String QUEUE_NAME = "muma";
+	private static final String SENSOR_TEMPERATURE_ID = "-5";
+	private static final String CONTROLLER_TEMPERATURE_ID = "5";
+	private static final String CHANGE_HUMIDITY_ID = "CH";
+	
     private boolean heaterState = false;	// Heater state: false == off, true == on
     private boolean chillerState = false;	// Chiller state: false == off, true == on
     private float currentTemperature;		// Current simulated ambient room temperature
@@ -31,6 +36,7 @@ public class TemperatureSensor extends Sensor implements Runnable {
         super();
     }
 
+    /**
     public void run() {
         // Here we check to see if registration worked. If ef is null then the
         // event manager interface was not properly created.
@@ -70,7 +76,7 @@ public class TemperatureSensor extends Sensor implements Runnable {
              * ******************************************************************
              ** Here we start the main simulation loop
              * *******************************************************************
-             */
+             *//**
             messageWin.writeMessage("Beginning Simulation... ");
 
             while (!isDone) {
@@ -158,7 +164,28 @@ public class TemperatureSensor extends Sensor implements Runnable {
             System.out.println("Unable to register with the event manager.\n\n");
         } // if
     }
-
+*/
+    
+    @Override
+    public void run(){
+    	while(true){
+    		try {
+    			Thread.sleep(1000);
+    			// Receives any new message from the temperature controller
+    			receiveMessage(CONTROLLER_TEMPERATURE_ID);
+    			
+    			if(sendMessage(SENSOR_TEMPERATURE_ID, "100")){
+    				System.out.println(">>> [TEMPERATURE SENSOR] SUCCESS! New message was sent.");
+    			}else{
+    				System.out.println(">>> [TEMPERATURE SENSOR] ERROR! A problem was encounter when sending the new message.");
+    			}
+    		} catch (InterruptedException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+    
+    
     private static void createInstance() {
         if (INSTANCE == null) {
             synchronized (TemperatureSensor.class) {
