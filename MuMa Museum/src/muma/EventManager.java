@@ -16,6 +16,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+import controllers.DoorController;
 import controllers.HumidityController;
 import graphics.MainMenu;
 import controllers.TemperatureController;
@@ -25,6 +26,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import sensors.DoorSensor;
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
 import sensors.WindowSensor;
@@ -47,6 +49,8 @@ public class EventManager implements Runnable{
 	private static HumiditySensor humiditySensor = HumiditySensor.getInstance();
 	private static WindowController windowController = WindowController.getInstance();
 	private static WindowSensor windowSensor = WindowSensor.getInstance();
+	private static DoorController doorController = DoorController.getInstance();
+	private static DoorSensor doorSensor = DoorSensor.getInstance();
 	
 	/**
 	 * @method Constructor
@@ -197,6 +201,13 @@ public class EventManager implements Runnable{
 				}else{
 					mmMuma.updateDevices("Wi0");
 				}
+				
+				if(doorController.isDoorState()){
+					mmMuma.updateDevices("Do1");
+				}else{
+					mmMuma.updateDevices("Do0");
+				}
+				
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
@@ -234,5 +245,11 @@ public class EventManager implements Runnable{
 		
 		windowSensor = WindowSensor.getInstance();
 		new Thread(windowSensor).start();
+		
+		doorController = DoorController.getInstance();
+		new Thread(doorController).start();
+		
+		doorSensor = DoorSensor.getInstance();
+		new Thread(doorSensor).start();
 	}
 }
