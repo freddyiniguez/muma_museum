@@ -159,7 +159,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlMovement = new JLabel("Movement Alarm");
 		BufferedImage biMovement;
 		try{
-			biMovement = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biMovement = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlMovementAlarm = new JLabel(new ImageIcon(biMovement));
 		}catch(IOException e){
 			e.printStackTrace();
@@ -170,7 +170,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlDoor = new JLabel("Door Alarm");
 		BufferedImage biDoor;
 		try{
-			biDoor = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biDoor = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlDoorAlarm = new JLabel(new ImageIcon(biDoor));
 		}catch(IOException e){
 			e.printStackTrace();
@@ -181,7 +181,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlWindow = new JLabel("Window Alarm");
 		BufferedImage biWindow;
 		try {
-			biWindow = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biWindow = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlWindowAlarm = new JLabel(new ImageIcon(biWindow));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -194,7 +194,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlSprinklers = new JLabel("Sprinklers Alarm");
 		BufferedImage biSprinklers;
 		try{
-			biSprinklers = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biSprinklers = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlSprinklersAlarm = new JLabel(new ImageIcon(biSprinklers));
 		}catch (IOException e){
 			e.printStackTrace();
@@ -205,7 +205,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlFire = new JLabel("Fire Alarm");
 		BufferedImage biFire;
 		try{
-			biFire = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biFire = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlFireAlarm = new JLabel(new ImageIcon(biFire));
 		}catch (IOException e){
 			e.printStackTrace();
@@ -216,7 +216,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		jlIntruder = new JLabel("Intruder Alarm");
 		BufferedImage biIntruder;
 		try{
-			biIntruder = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			biIntruder = ImageIO.read(this.getClass().getResource("alarm_off.png"));
 			jlIntruderAlarm = new JLabel(new ImageIcon(biIntruder));
 		}catch (IOException e){
 			e.printStackTrace();
@@ -261,62 +261,62 @@ public class MainMenu extends JFrame implements ActionListener {
 				jtfChiller.setBackground(Color.GRAY);
 				break;
 			case "Wi1":		// Window Alarm ON
-				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlWindowAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Wi0":		// Window Alarm OFF
-				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlWindowAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Do1":		// Door Alarm ON
-				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlDoorAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Do0":		// Door Alarm OFF
-				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlDoorAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Mo1":		// Movement Alarm ON
-				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlMovementAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Mo0":		// Movement Alarm OFF
-				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlMovementAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
 			case "In1":		// Intruder Alarm ON
-				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "In0":		// Intruder Alarm OFF
-				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Fi1":		// Fire Alarm ON
-				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlFireAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Fi0":		// Fire Alarm OFF
-				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlFireAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Sp1":		// Sprinklers Alarm ON
-				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_on.png"));
 				revalidate();
 				repaint();
 				break;
 			case "Sp0":		// Sprinklers Alarm OFF
-				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 				break;
@@ -325,22 +325,22 @@ public class MainMenu extends JFrame implements ActionListener {
 				jtfDehumifier.setBackground(Color.GRAY);
 				jtfHeater.setBackground(Color.GRAY);
 				jtfChiller.setBackground(Color.GRAY);
-				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlWindowAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
-				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlDoorAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
-				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlMovementAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
-				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
-				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlFireAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
-				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_off.png"));
 				revalidate();
 				repaint();
 		}
