@@ -195,8 +195,13 @@ public class EventManager implements Runnable{
 				
 				if(temperatureController.isChillerState()){
 					mmMuma.updateDevices("Ch1");
+					temperatureController.setChillerCont(temperatureController.getChillerCont() + 1);
 				}else{
 					mmMuma.updateDevices("Ch0");
+					temperatureController.setChillerCont(temperatureController.getChillerCont() + 1);
+				}
+				if(temperatureController.getChillerCont() > 500){ // Gets wrong by usage.
+					mmMuma.updateDevices("Ch3");
 				}
 				if(temperatureController.isHeaterState()){
 					mmMuma.updateDevices("He1");

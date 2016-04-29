@@ -305,6 +305,11 @@ public class MainMenu extends JFrame implements ActionListener {
 				revalidate();
 				repaint();
 				break;
+			case "Ch3":		// Chiller get wrong by usage ON
+				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_wrong.png")));
+				revalidate();
+				repaint();
+				break;
 			case "Wi1":		// Window Alarm ON
 				jlWindowAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();

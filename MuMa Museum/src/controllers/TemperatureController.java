@@ -32,6 +32,7 @@ public class TemperatureController extends Controller implements Runnable {
     private boolean heaterState = false;		// Heater state: false == off, true == on
     private boolean heaterMalfunction = false; 	// Heater malfunctioning: true == is malfunctioning, false == works well
     private boolean chillerState = false;		// Chiller state: false == off, true == on
+    private int chillerCont = 0;
     
     private static TemperatureController INSTANCE = new TemperatureController();
 
@@ -168,11 +169,20 @@ public class TemperatureController extends Controller implements Runnable {
 	
 	public boolean isHeaterMalfunction(){
 		float malfunctioning = TemperatureSensor.getInstance().getRandomFloat();
-		if(malfunctioning > 0.8 && malfunctioning < 0.9){
+		if(malfunctioning < 0.50F && malfunctioning > 0.49F){
 			heaterMalfunction = true; // It's having a malfunctioning
+			heaterState = false;
 			return heaterMalfunction;
 		}else{
 			return heaterMalfunction;
 		}
+	}
+	
+	public void setChillerCont(int chillerCont){
+		this.chillerCont = chillerCont;
+	}
+	
+	public int getChillerCont(){
+		return chillerCont;
 	}
 }
