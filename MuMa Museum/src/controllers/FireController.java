@@ -16,12 +16,15 @@
 
 package controllers;
 
+import javax.swing.JOptionPane;
+
 import sensors.FireSensor;
 
 public class FireController extends Controller implements Runnable {
 	private static final String SENSOR_FIRE_ID = "-10";
 	private static final String CONTROLLER_FIRE_ID = "10";
-    private boolean fireState = false;	// Fire state: false == no fire detected, true == fire detected
+    private boolean fireState = false;			// Fire state: false == no fire detected, true == fire detected
+    private boolean sprinklesState = false;		// Sprinkles state: false == false alarm, true == fire is real
     
     private static FireController INSTANCE = new FireController();
     
@@ -39,6 +42,15 @@ public class FireController extends Controller implements Runnable {
     				if(FireSensor.getInstance().getRandomCoin()){ // Detects fire!
     					setFireState(true);
     					sendMessage(CONTROLLER_FIRE_ID, "Fi1");
+    					Object[] options = {"No","Yes"};
+    					int falseAlarm = JOptionPane.showOptionDialog(null, "MuMa Software has detected fire. Is that correct?", "WARNING! Fire detected!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+    					if(falseAlarm==1){ 				// It was not a false alarm and should start the sprinkles.
+    						setSprinklesState(true);
+    						sendMessage(CONTROLLER_FIRE_ID, "Sp1");
+    					}else{
+    						setSprinklesState(false);	// It was a false alarm and should stop the sprinkles action.
+    						sendMessage(CONTROLLER_FIRE_ID, "Sp0");
+    					}
     				}
     			}else{
     				setFireState(false);
@@ -75,7 +87,7 @@ public class FireController extends Controller implements Runnable {
     
     /**
      * @method Getters and Setter
-     * @description Getters and Setter methods to obtain the fire status.
+     * @description Getters and Setter methods to obtain the fire status and determines if it was a false alarm.
      */
 	public boolean isFireState() {
 		return fireState;
@@ -83,5 +95,13 @@ public class FireController extends Controller implements Runnable {
 
 	public void setFireState(boolean fireState) {
 		this.fireState = fireState;
+	}
+	
+	public boolean isSprinklesState() {
+		return sprinklesState;
+	}
+
+	public void setSprinklesState(boolean sprinklesState) {
+		this.sprinklesState = sprinklesState;
 	}
 }

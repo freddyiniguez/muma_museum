@@ -234,6 +234,12 @@ public class EventManager implements Runnable{
 					mmMuma.updateDevices("Fi0");
 				}
 				
+				if(fireController.isSprinklesState()){
+					mmMuma.updateDevices("Sp1");
+				}else{
+					mmMuma.updateDevices("Sp0");
+				}
+				
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
