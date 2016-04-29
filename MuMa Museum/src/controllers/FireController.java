@@ -32,7 +32,7 @@ public class FireController extends Controller implements Runnable {
     public void run(){
     	while(true){
     		try {
-    			Thread.sleep(delay);
+    			Thread.sleep(300000);
     			
     			// Receives a message from the fire sensor
     			receiveMessage(SENSOR_FIRE_ID);

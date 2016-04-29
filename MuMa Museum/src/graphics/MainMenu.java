@@ -16,7 +16,6 @@
 package graphics;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -32,7 +31,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -57,11 +55,10 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JLabel jlDehumidifierMeasure;
 	private JLabel jlChillerMeasure;
 	private JLabel jlHeaterMeasure;
-	private JTextField jtfHumidifier;
-	private JTextField jtfDehumifier;
-	private JTextField jtfChiller;
-	private JTextField jtfHeater;
-	
+	private JLabel jlHumidifierIcon;
+	private JLabel jlDehumidifierIcon;
+	private JLabel jlChillerIcon;
+	private JLabel jlHeaterIcon;	
 	private JLabel jlWindowAlarm;
 	private JLabel jlWindow;
 	private JLabel jlDoorAlarm;
@@ -117,41 +114,65 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		jlHumidifier = new JLabel("Humidifier", JLabel.CENTER);
 		jlHumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
-		jtfHumidifier = new JTextField("");
-		jtfHumidifier.setBackground(Color.GRAY);
+		BufferedImage biHumidifierIcon;
+		try{
+			biHumidifierIcon = ImageIO.read(this.getClass().getResource("humidifier_off.png"));
+			jlHumidifierIcon = new JLabel(new ImageIcon(biHumidifierIcon));
+			jlHumidifierIcon.setToolTipText("HUMIDIFIER: This device helps to increase the percentage of the humidity in the environment.");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		JPanel firstQuarter = new JPanel(new BorderLayout());
 		firstQuarter.add(jlHumidifier, BorderLayout.NORTH);
-		firstQuarter.add(jtfHumidifier, BorderLayout.CENTER);
+		firstQuarter.add(jlHumidifierIcon, BorderLayout.CENTER);
 		firstQuarter.add(jlHumidifierMeasure, BorderLayout.SOUTH);
 		mainPanel.add(firstQuarter);
 		
 		jlDehumidifier = new JLabel("Dehumidifier", JLabel.CENTER);
 		jlDehumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
-		jtfDehumifier = new JTextField("");
-		jtfDehumifier.setBackground(Color.GRAY);
+		BufferedImage biDehumidifierIcon;
+		try{
+			biDehumidifierIcon = ImageIO.read(this.getClass().getResource("dehumidifier_off.png"));
+			jlDehumidifierIcon = new JLabel(new ImageIcon(biDehumidifierIcon));
+			jlDehumidifierIcon.setToolTipText("DEHUMIFIER: This device helps to decrease the percentage of the humidity in the environment.");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		JPanel secondQuarter = new JPanel(new BorderLayout());
 		secondQuarter.add(jlDehumidifier, BorderLayout.NORTH);
-		secondQuarter.add(jtfDehumifier, BorderLayout.CENTER);
+		secondQuarter.add(jlDehumidifierIcon, BorderLayout.CENTER);
 		secondQuarter.add(jlDehumidifierMeasure, BorderLayout.SOUTH);
 		mainPanel.add(secondQuarter);
 		
 		jlChiller = new JLabel("Chiller", JLabel.CENTER);
 		jlChillerMeasure = new JLabel("Initializing...", JLabel.CENTER);
-		jtfChiller = new JTextField("");
-		jtfChiller.setBackground(Color.GRAY);
+		BufferedImage biChillerIcon;
+		try{
+			biChillerIcon = ImageIO.read(this.getClass().getResource("chiller_off.png"));
+			jlChillerIcon = new JLabel(new ImageIcon(biChillerIcon));
+			jlChillerIcon.setToolTipText("CHILLER: This device decrease the temperature of the environment. The measurements are in Fahrenheit degrees.");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		JPanel thirdQuarter = new JPanel(new BorderLayout());
 		thirdQuarter.add(jlChiller, BorderLayout.NORTH);
-		thirdQuarter.add(jtfChiller, BorderLayout.CENTER);
+		thirdQuarter.add(jlChillerIcon, BorderLayout.CENTER);
 		thirdQuarter.add(jlChillerMeasure, BorderLayout.SOUTH);
 		mainPanel.add(thirdQuarter);
 		
 		jlHeater = new JLabel("Heater", JLabel.CENTER);
 		jlHeaterMeasure = new JLabel("Initializing...", JLabel.CENTER);
-		jtfHeater = new JTextField("");
-		jtfHeater.setBackground(Color.GRAY);
+		BufferedImage biHeaterIcon;
+		try{
+			biHeaterIcon = ImageIO.read(this.getClass().getResource("heater_off.png"));
+			jlHeaterIcon = new JLabel(new ImageIcon(biHeaterIcon));
+			jlHeaterIcon.setToolTipText("HEATER: This device helps to increase the temperature of the environment. The measurements are in Fahrenheit degrees.");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		JPanel fourthQuarter = new JPanel(new BorderLayout());
 		fourthQuarter.add(jlHeater, BorderLayout.NORTH);
-		fourthQuarter.add(jtfHeater, BorderLayout.CENTER);
+		fourthQuarter.add(jlHeaterIcon, BorderLayout.CENTER);
 		fourthQuarter.add(jlHeaterMeasure, BorderLayout.SOUTH);
 		mainPanel.add(fourthQuarter);
 		
@@ -240,110 +261,138 @@ public class MainMenu extends JFrame implements ActionListener {
 	public void updateDevices(String action){
 		switch(action){
 			case "Hu1":		// Humidifier ON
-				jtfHumidifier.setBackground(Color.GREEN);
+				jlHumidifierIcon.setIcon(new ImageIcon(this.getClass().getResource("humidifier_on.png")));
+				revalidate();
+				repaint();
 				break;
 			case "Hu0":		// Humidifier OFF
-				jtfHumidifier.setBackground(Color.GRAY);
+				jlHumidifierIcon.setIcon(new ImageIcon(this.getClass().getResource("humidifier_off.png")));
+				revalidate();
+				repaint();
 				break;
 			case "De1":		// Dehumidifier ON
-				jtfDehumifier.setBackground(Color.GREEN);
+				jlDehumidifierIcon.setIcon(new ImageIcon(this.getClass().getResource("dehumidifier_on.png")));
+				revalidate();
+				repaint();
 				break;
 			case "De0":		// Dehumidifier OFF
-				jtfDehumifier.setBackground(Color.GRAY);
+				jlDehumidifierIcon.setIcon(new ImageIcon(this.getClass().getResource("dehumidifier_off.png")));
+				revalidate();
+				repaint();
 				break;
 			case "He1":		// Heater ON
-				jtfHeater.setBackground(Color.GREEN);
+				jlHeaterIcon.setIcon(new ImageIcon(this.getClass().getResource("heater_on.png")));
+				revalidate();
+				repaint();
 				break;
 			case "He0":		// Heater OFF
-				jtfHeater.setBackground(Color.GRAY);
+				jlHeaterIcon.setIcon(new ImageIcon(this.getClass().getResource("heater_off.png")));
+				revalidate();
+				repaint();
 				break;
 			case "Ch1":		// Chiller ON
-				jtfChiller.setBackground(Color.GREEN);
+				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_on.png")));
+				revalidate();
+				repaint();
 				break;
 			case "Ch0":		// Chiller OFF
-				jtfChiller.setBackground(Color.GRAY);
+				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_off.png")));
+				revalidate();
+				repaint();
 				break;
 			case "Wi1":		// Window Alarm ON
-				jlWindowAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlWindowAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Wi0":		// Window Alarm OFF
-				jlWindowAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlWindowAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Do1":		// Door Alarm ON
-				jlDoorAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlDoorAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Do0":		// Door Alarm OFF
-				jlDoorAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlDoorAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Mo1":		// Movement Alarm ON
-				jlMovementAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlMovementAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Mo0":		// Movement Alarm OFF
-				jlMovementAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlMovementAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			case "In1":		// Intruder Alarm ON
-				jlIntruderAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "In0":		// Intruder Alarm OFF
-				jlIntruderAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Fi1":		// Fire Alarm ON
-				jlFireAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlFireAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Fi0":		// Fire Alarm OFF
-				jlFireAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlFireAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Sp1":		// Sprinklers Alarm ON
-				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_on.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_on.png")));
 				revalidate();
 				repaint();
 				break;
 			case "Sp0":		// Sprinklers Alarm OFF
-				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 				break;
 			default:
-				jtfHumidifier.setBackground(Color.GRAY);
-				jtfDehumifier.setBackground(Color.GRAY);
-				jtfHeater.setBackground(Color.GRAY);
-				jtfChiller.setBackground(Color.GRAY);
-				jlWindowAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlDehumidifierIcon.setIcon(new ImageIcon(this.getClass().getResource("dehumidifier_off.png")));
 				revalidate();
 				repaint();
-				jlDoorAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlHeaterIcon.setIcon(new ImageIcon(this.getClass().getResource("heater_on.png")));
 				revalidate();
 				repaint();
-				jlMovementAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlHeaterIcon.setIcon(new ImageIcon(this.getClass().getResource("heater_off.png")));
 				revalidate();
 				repaint();
-				jlIntruderAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_on.png")));
 				revalidate();
 				repaint();
-				jlFireAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				
+				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_off.png")));
 				revalidate();
 				repaint();
-				jlSprinklersAlarm.setIcon(new ImageIcon("alarm_off.png"));
+				jlWindowAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
+				revalidate();
+				repaint();
+				jlDoorAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
+				revalidate();
+				repaint();
+				jlMovementAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
+				revalidate();
+				repaint();
+				jlIntruderAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
+				revalidate();
+				repaint();
+				jlFireAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
+				revalidate();
+				repaint();
+				jlSprinklersAlarm.setIcon(new ImageIcon(this.getClass().getResource("alarm_off.png")));
 				revalidate();
 				repaint();
 		}
@@ -371,6 +420,11 @@ public class MainMenu extends JFrame implements ActionListener {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
 				}
+		}
+		
+		// About MuMa Software
+		if(e.getSource()==jmiAbout){
+			JOptionPane.showMessageDialog(null, "Release Candidate v2.0\n This version of the MuMa Software is an upgrade made by Choreros, students of the Mathematics Research Center (CIMAT)", "About MuMa Software", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
