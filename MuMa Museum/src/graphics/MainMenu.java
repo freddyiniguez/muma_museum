@@ -21,7 +21,12 @@ import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -54,12 +59,25 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JTextField jtfChiller;
 	private JTextField jtfHeater;
 	
+	private JLabel jlWindowAlarm;
+	private JLabel jlWindow;
+	private JLabel jlDoorAlarm;
+	private JLabel jlDoor;
+	private JLabel jlMovementAlarm;
+	private JLabel jlMovement;
+	private JLabel jlIntruderAlarm;
+	private JLabel jlIntruder;
+	private JLabel jlFireAlarm;
+	private JLabel jlFire;
+	private JLabel jlSprinklersAlarm;
+	private JLabel jlSprinklers;
+	
 	/**
 	 * @method Constructor
 	 * @parameter Receives the title of the Window
 	 */
 	public MainMenu(){
-		super("MuMa Museum: Security Software System");
+		super("MuMa Museum: Security and Control Software System");
 		createsWindow();
 	}
 	
@@ -87,10 +105,12 @@ public class MainMenu extends JFrame implements ActionListener {
 		
 		this.setJMenuBar(jmbTopBar);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(600,600);
-		this.setLayout(new GridLayout(2,2));
+		this.setSize(800,600);
+		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
+		
+		JPanel mainPanel = new JPanel(new GridLayout(2,2));
 		
 		jlHumidifier = new JLabel("Humidifier", JLabel.CENTER);
 		jlHumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
@@ -100,7 +120,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		firstQuarter.add(jlHumidifier, BorderLayout.NORTH);
 		firstQuarter.add(jtfHumidifier, BorderLayout.CENTER);
 		firstQuarter.add(jlHumidifierMeasure, BorderLayout.SOUTH);
-		this.add(firstQuarter);
+		mainPanel.add(firstQuarter);
 		
 		jlDehumidifier = new JLabel("Dehumidifier", JLabel.CENTER);
 		jlDehumidifierMeasure = new JLabel("Initializing...", JLabel.CENTER);
@@ -110,7 +130,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		secondQuarter.add(jlDehumidifier, BorderLayout.NORTH);
 		secondQuarter.add(jtfDehumifier, BorderLayout.CENTER);
 		secondQuarter.add(jlDehumidifierMeasure, BorderLayout.SOUTH);
-		this.add(secondQuarter);
+		mainPanel.add(secondQuarter);
 		
 		jlChiller = new JLabel("Chiller", JLabel.CENTER);
 		jlChillerMeasure = new JLabel("Initializing...", JLabel.CENTER);
@@ -120,7 +140,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		thirdQuarter.add(jlChiller, BorderLayout.NORTH);
 		thirdQuarter.add(jtfChiller, BorderLayout.CENTER);
 		thirdQuarter.add(jlChillerMeasure, BorderLayout.SOUTH);
-		this.add(thirdQuarter);
+		mainPanel.add(thirdQuarter);
 		
 		jlHeater = new JLabel("Heater", JLabel.CENTER);
 		jlHeaterMeasure = new JLabel("Initializing...", JLabel.CENTER);
@@ -130,7 +150,82 @@ public class MainMenu extends JFrame implements ActionListener {
 		fourthQuarter.add(jlHeater, BorderLayout.NORTH);
 		fourthQuarter.add(jtfHeater, BorderLayout.CENTER);
 		fourthQuarter.add(jlHeaterMeasure, BorderLayout.SOUTH);
-		this.add(fourthQuarter);
+		mainPanel.add(fourthQuarter);
+		
+		this.add(mainPanel, BorderLayout.CENTER);
+		
+		JPanel leftPanel = new JPanel(new GridLayout(6,1));
+		
+		jlMovement = new JLabel("Movement Alarm");
+		BufferedImage biMovement;
+		try{
+			biMovement = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlMovementAlarm = new JLabel(new ImageIcon(biMovement));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		leftPanel.add(jlMovement, JLabel.CENTER);
+		leftPanel.add(jlMovementAlarm, JLabel.CENTER);
+		
+		jlDoor = new JLabel("Door Alarm");
+		BufferedImage biDoor;
+		try{
+			biDoor = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlDoorAlarm = new JLabel(new ImageIcon(biDoor));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		leftPanel.add(jlDoor, JLabel.CENTER);
+		leftPanel.add(jlDoorAlarm, JLabel.CENTER);
+		
+		jlWindow = new JLabel("Window Alarm");
+		BufferedImage biWindow;
+		try {
+			biWindow = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlWindowAlarm = new JLabel(new ImageIcon(biWindow));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		leftPanel.add(jlWindow, JLabel.CENTER);
+		leftPanel.add(jlWindowAlarm, JLabel.CENTER);
+		
+		JPanel rightPanel = new JPanel(new GridLayout(6,1));
+		
+		jlSprinklers = new JLabel("Sprinklers Alarm");
+		BufferedImage biSprinklers;
+		try{
+			biSprinklers = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlSprinklersAlarm = new JLabel(new ImageIcon(biSprinklers));
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		rightPanel.add(jlSprinklers, JLabel.CENTER);
+		rightPanel.add(jlSprinklersAlarm, JLabel.CENTER);
+		
+		jlFire = new JLabel("Fire Alarm");
+		BufferedImage biFire;
+		try{
+			biFire = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlFireAlarm = new JLabel(new ImageIcon(biFire));
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		rightPanel.add(jlFire, JLabel.CENTER);
+		rightPanel.add(jlFireAlarm, JLabel.CENTER);
+		
+		jlIntruder = new JLabel("Intruder Alarm");
+		BufferedImage biIntruder;
+		try{
+			biIntruder = ImageIO.read(this.getClass().getResource("/graphics/alarm_off.png"));
+			jlIntruderAlarm = new JLabel(new ImageIcon(biIntruder));
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		rightPanel.add(jlIntruder, JLabel.CENTER);
+		rightPanel.add(jlIntruderAlarm, JLabel.CENTER);
+		
+		this.add(leftPanel, BorderLayout.WEST);
+		this.add(rightPanel, BorderLayout.EAST);
 		
 		this.setVisible(true);
 	}
