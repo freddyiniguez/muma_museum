@@ -1,12 +1,12 @@
 /**
  * **************************************************************************************
- * File:Controller.java 
+ * File: Controller.java 
  * Course: Software Architecture 
  * Project: Event Architectures
- * Institution: Autonomous University of Zacatecas 
- * Date: November 2015
- * Developer: Ferman Ivan Tovar 
- * Reviewer: Perla Velasco Elizondo
+ * Institution: Mathematics Research Center
+ * Date: April 2016
+ * Developer: José Luis Blanco Aguirre, Freddy Íñiguez López, Carlos Adrian Naal Avila
+ * Reviewer: Dra. Perla Velasco Elizondo
  * **************************************************************************************
  * This class contains the necessary to build a controller, in order to every 
  * controller extends from this.
@@ -14,7 +14,6 @@
  */
 package controllers;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -88,13 +87,22 @@ public class Controller extends Component {
 					errorMessage = ">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				case -6:
-					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
-					break;
-				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
+				case -7:
+					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
 				case -8:
-					errorMessage = ">>> [TRESPASSER CONTROLLER] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [MOVEMENT CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case -9:
+					errorMessage = ">>> [INTRUDER CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case -10:
+					errorMessage = ">>> [FIRE CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case -11:
+					errorMessage = ">>> [SPRINKLERS CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				default:
 					break;
@@ -129,16 +137,25 @@ public class Controller extends Component {
 				outputMessage = ">>> [TEMPERATURE CONTROLLER] SUCCESS! I received a message from the Temperature Sensor: ";
 				break;
 			case 6:
-				outputMessage = ">>> [DOOR CONTROLLER] SUCCESS! I received a message from the Door Sensor: ";
-				break;
-			case 7:
 				outputMessage = ">>> [WINDOW CONTROLLER] SUCCESS! I received a message from the Window Sensor: ";
 				break;
+			case 7:
+				outputMessage = ">>> [DOOR CONTROLLER] SUCCESS! I received a message from the Door Sensor: ";
+				break;
 			case 8:
-				outputMessage = ">>> [TRESPASSER CONTROLLER] SUCCESS! I received a message from the Trespasser Sensor: ";
+				outputMessage = ">>> [MOVEMENT CONTROLLER] SUCCESS! I received a message from the Movement Sensor: ";
+				break;
+			case 9:
+				outputMessage = ">>> [INTRUDER CONTROLLER] SUCCESS! I received a message from the Intruder Sensor: ";
+				break;
+			case 10:
+				outputMessage = ">>> [FIRE CONTROLLER] SUCCESS! I received a message from the Fire Sensor: ";
+				break;
+			case 11:
+				outputMessage = ">>> [SPRINKLERS CONTROLLER] SUCCESS! I received a message from the Sprinklers Sensor: ";
 				break;
 			default:
-				outputMessage = ">>> [CONTROLLER WARNING!] Code Unknown";
+				outputMessage = ">>> [CONTROLLER WARNING!] Code Unknown: ";
 				break;
 			}
 			consumer = new DefaultConsumer(channel){
@@ -161,13 +178,22 @@ public class Controller extends Component {
 					errorMessage = ">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				case 6:
-					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
-					break;
-				case 7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
+				case 7:
+					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
 				case 8:
-					errorMessage = ">>> [TRESPASSER CONTROLLER] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [MOVEMENT CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 9:
+					errorMessage = ">>> [INTRUDER CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 10:
+					errorMessage = ">>> [FIRE CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 11:
+					errorMessage = ">>> [SPRINKLERS CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				default:
 					errorMessage = ">>> ERROR! The message could not be delivered: ";

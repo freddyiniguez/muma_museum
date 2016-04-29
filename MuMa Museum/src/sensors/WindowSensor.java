@@ -1,6 +1,6 @@
 /**
  * **************************************************************************************
- * File: HumiditySensor.java 
+ * File: WindowSensor.java 
  * Course: Software Architecture 
  * Project: Event Architectures
  * Institution: Mathematics Research Center
@@ -8,19 +8,17 @@
  * Developer: José Luis Blanco Aguirre, Freddy Íñiguez López, Carlos Adrian Naal Avila
  * Reviewer: Dra. Perla Velasco Elizondo
  * **************************************************************************************
- * This class simulates a humidity sensor. It polls the event manager for events
- * corresponding to changes in state of the humidifier or dehumidifier and
- * reacts to them by trending the relative humidity up or down. The current
- * relative humidity is posted to the event manager.
+ * This class simulates a sensor for a window. It post to the event manager when a window
+ * is broken.
  * **************************************************************************************
  */
 package sensors;
 
-public class HumiditySensor extends Sensor implements Runnable {
-	private static final String SENSOR_HUMIDITY_ID = "-4";
-	private static final String CONTROLLER_HUMIDITY_ID = "4";
+public class WindowSensor extends Sensor implements Runnable {
+	private static final String SENSOR_WINDOW_ID = "-6";
+	private boolean windowState = false; // Window state: false == ok, true == broken
     
-    private static HumiditySensor INSTANCE = new HumiditySensor();
+    private static WindowSensor INSTANCE = new WindowSensor();
     
     @Override
     public void run(){
@@ -28,14 +26,18 @@ public class HumiditySensor extends Sensor implements Runnable {
     		try {
     			Thread.sleep(delay);
     			
-    			// Receives a message from the humidity controller
-    			receiveMessage(CONTROLLER_HUMIDITY_ID);
-    			
-    			// Sends a message to the humidity controller
-    			if(sendMessage(SENSOR_HUMIDITY_ID, "Hu0")){
-    				System.out.println(">>> [HUMIDITY SENSOR] SUCCESS! New message was sent.");
+    			// Sends a message to the window controller
+    			if(windowState){
+    				sendMessage(SENSOR_WINDOW_ID, "Wi1");
+    				System.out.println(">>> [WINDOW SENSOR] SUCCESS! New message was sent.");
     			}else{
-    				System.out.println(">>> [HUMIDITY SENSOR] ERROR! A problem was encounter when sending the new message.");
+    				sendMessage(SENSOR_WINDOW_ID, "Wi0");
+    				System.out.println(">>> [WINDOW SENSOR] SUCCESS! New message was sent.");
+    			}
+    			
+    			// Simulates if the window get broken
+    			if(getRandomCoin()){
+    				windowState = true;
     			}
     		} catch (InterruptedException e) {
     			e.printStackTrace();
@@ -45,9 +47,9 @@ public class HumiditySensor extends Sensor implements Runnable {
     
     private static void createInstance() {
         if (INSTANCE == null) {
-            synchronized (HumiditySensor.class) {
+            synchronized (WindowSensor.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new HumiditySensor();
+                    INSTANCE = new WindowSensor();
                 }
             }
         }
@@ -59,19 +61,11 @@ public class HumiditySensor extends Sensor implements Runnable {
      * 
      * @return The instance of this class.
      */
-    public static HumiditySensor getInstance() {
+    public static WindowSensor getInstance() {
         if (INSTANCE == null) {
             createInstance();
         }
         return INSTANCE;
-    }
-    
-    /**
-     * @method getRandomFloat()
-     * @description Returns a randomly-generated number between 0 and 1
-     */
-    public float getRandomFloat(){
-    	return super.getRandomNumber();
     }
     
     /**

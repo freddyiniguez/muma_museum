@@ -1,12 +1,12 @@
 /**
  * **************************************************************************************
- * File:TemperatureSensor.java 
+ * File: TemperatureSensor.java 
  * Course: Software Architecture 
  * Project: Event Architectures
- * Institution: Autonomous University of Zacatecas 
- * Date: November 2015
- * Developer: Ferman Ivan Tovar 
- * Reviewer: Perla Velasco Elizondo
+ * Institution: Mathematics Research Center
+ * Date: April 2016
+ * Developer: José Luis Blanco Aguirre, Freddy Íñiguez López, Carlos Adrian Naal Avila
+ * Reviewer: Dra. Perla Velasco Elizondo
  * **************************************************************************************
  * This class simulates a temperature sensor. It polls the event manager for
  * events corresponding to changes in state of the heater or chiller and reacts
@@ -16,19 +16,9 @@
  */
 package sensors;
 
-import common.Component;
-import instrumentation.MessageWindow;
-
 public class TemperatureSensor extends Sensor implements Runnable {
-
-	private static final String QUEUE_NAME = "muma";
 	private static final String SENSOR_TEMPERATURE_ID = "-5";
 	private static final String CONTROLLER_TEMPERATURE_ID = "5";
-	private static final String CHANGE_HUMIDITY_ID = "CH";
-	
-    private boolean heaterState = false;	// Heater state: false == off, true == on
-    private boolean chillerState = false;	// Chiller state: false == off, true == on
-    private float currentTemperature;		// Current simulated ambient room temperature
 
     private static TemperatureSensor INSTANCE = new TemperatureSensor();
     
@@ -36,11 +26,13 @@ public class TemperatureSensor extends Sensor implements Runnable {
     public void run(){
     	while(true){
     		try {
-    			Thread.sleep(1000);
-    			// Receives any new message from the temperature controller
+    			Thread.sleep(delay);
+    			
+    			// Receives a message from the temperature controller
     			receiveMessage(CONTROLLER_TEMPERATURE_ID);
     			
-    			if(sendMessage(SENSOR_TEMPERATURE_ID, "Ch1")){
+    			// Sends a message to the temperature controller
+    			if(sendMessage(SENSOR_TEMPERATURE_ID, "Ch0")){
     				System.out.println(">>> [TEMPERATURE SENSOR] SUCCESS! New message was sent.");
     			}else{
     				System.out.println(">>> [TEMPERATURE SENSOR] ERROR! A problem was encounter when sending the new message.");
@@ -50,7 +42,6 @@ public class TemperatureSensor extends Sensor implements Runnable {
     		}
     	}
     }
-    
     
     private static void createInstance() {
         if (INSTANCE == null) {

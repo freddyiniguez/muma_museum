@@ -44,7 +44,7 @@ public class TemperatureController extends Controller implements Runnable {
     			receiveMessage(SENSOR_TEMPERATURE_ID);
     			
     			// Sends a message according to the values of the humidity device
-    			if(getCurrentTemperature() > 75){	// Chiller ON
+    			if(getCurrentTemperature() > maxTemperature){	// Chiller ON
     				sendMessage(CONTROLLER_TEMPERATURE_ID, "Ch1");
     				chillerState = true;
     				Thread.sleep(10000);
@@ -62,7 +62,7 @@ public class TemperatureController extends Controller implements Runnable {
     					}
     				};
     				chillerThread.start();
-    			}else if(getCurrentTemperature() < 70){	// Heater ON
+    			}else if(getCurrentTemperature() < minTemperature){	// Heater ON
     				sendMessage(CONTROLLER_TEMPERATURE_ID, "He1");
     				heaterState = true;
     				Thread.sleep(10000);
@@ -89,7 +89,7 @@ public class TemperatureController extends Controller implements Runnable {
     				if(TemperatureSensor.getInstance().getRandomCoin()){
     					this.setCurrentTemperature(this.getCurrentTemperature() + TemperatureSensor.getInstance().getRandomFloat());
     				}else{
-    					//this.setCurrentTemperature(this.getCurrentTemperature() - TemperatureSensor.getInstance().getRandomFloat());
+    					this.setCurrentTemperature(this.getCurrentTemperature() - TemperatureSensor.getInstance().getRandomFloat());
     				}
     			}
     		} catch (InterruptedException e) {

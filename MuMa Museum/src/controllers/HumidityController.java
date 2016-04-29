@@ -44,7 +44,7 @@ public class HumidityController extends Controller implements Runnable {
     			receiveMessage(SENSOR_HUMIDITY_ID);
     			
     			// Sends a message according to the values of the humidity device
-    			if(getCurrentHumidity() > 55){			// Dehumidifier ON
+    			if(getCurrentHumidity() > maxHumidity){			// Dehumidifier ON
     				sendMessage(CONTROLLER_HUMIDITY_ID, "De1");
     				dehumidifierState = true;
     				Thread.sleep(10000);
@@ -63,7 +63,7 @@ public class HumidityController extends Controller implements Runnable {
     				};
     				dehumidifierThread.start();
     				
-    			}else if(getCurrentHumidity() < 45){	// Humidifier ON
+    			}else if(getCurrentHumidity() < minHumidity){	// Humidifier ON
     				sendMessage(CONTROLLER_HUMIDITY_ID, "Hu1");
     				humidifierState = true;
     				Thread.sleep(10000);
@@ -90,7 +90,7 @@ public class HumidityController extends Controller implements Runnable {
     				if(HumiditySensor.getInstance().getRandomCoin()){
     					this.setCurrentHumidity(this.getCurrentHumidity() + HumiditySensor.getInstance().getRandomFloat());
     				}else{
-    					//this.setCurrentHumidity(this.getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
+    					this.setCurrentHumidity(this.getCurrentHumidity() - HumiditySensor.getInstance().getRandomFloat());
     				}
     			}
     		} catch (InterruptedException e) {

@@ -19,6 +19,7 @@ import com.rabbitmq.client.Envelope;
 import controllers.HumidityController;
 import graphics.MainMenu;
 import controllers.TemperatureController;
+import controllers.WindowController;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -26,57 +27,26 @@ import java.util.concurrent.TimeoutException;
 
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
-import sensors.TrespasserSensor;
+import sensors.WindowSensor;
 
 public class EventManager implements Runnable{
 	private static final String QUEUE_NAME = "muma";
-	private static final String SENSOR_TEMPERATURE_ID = "-5";
 	private static final String SENSOR_HUMIDITY_ID = "-4";
+	private static final String SENSOR_TEMPERATURE_ID = "-5";
+	private static final String SENSOR_WINDOW_ID = "-6";
+	private static final String SENSOR_DOOR_ID = "-7";
+	private static final String SENSOR_MOVEMENT_ID = "-8";
+	private static final String SENSOR_INTRUDER_ID = "-9";
+	private static final String SENSOR_FIRE_ID = "-10";
+	private static final String SENSOR_SPRINKLERS_ID = "-11";
 	
 	private static MainMenu mmMuma = MainMenu.getInstance();
 	private static TemperatureController temperatureController = TemperatureController.getInstance();
 	private static TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
 	private static HumidityController humidityController = HumidityController.getInstance();
 	private static HumiditySensor humiditySensor = HumiditySensor.getInstance();
-	private static TrespasserSensor trespasserSensor = TrespasserSensor.getInstance();
-	
-	private String changeInTemperature;
-	private String changeInHumidity;
-	private String changeInDoor;
-	private String changeInWindow;
-	
-	
-	public String getChangeInTemperature() {
-		return changeInTemperature;
-	}
-
-	public void setChangeInTemperature(String changeInTemperature) {
-		this.changeInTemperature = changeInTemperature;
-	}
-
-	public String getChangeInHumidity() {
-		return changeInHumidity;
-	}
-
-	public void setChangeInHumidity(String changeInHumidity) {
-		this.changeInHumidity = changeInHumidity;
-	}
-
-	public String getChangeInDoor() {
-		return changeInDoor;
-	}
-
-	public void setChangeInDoor(String changeInDoor) {
-		this.changeInDoor = changeInDoor;
-	}
-
-	public String getChangeInWindow() {
-		return changeInWindow;
-	}
-
-	public void setChangeInWindow(String changeInWindow) {
-		this.changeInWindow = changeInWindow;
-	}
+	private static WindowController windowController = WindowController.getInstance();
+	private static WindowSensor windowSensor = WindowSensor.getInstance();
 	
 	/**
 	 * @method Constructor
@@ -221,9 +191,16 @@ public class EventManager implements Runnable{
 				}else{
 					mmMuma.updateDevices("He0");
 				}
+				
+				if(windowController.isWindowState()){
+					mmMuma.updateDevices("Wi1");
+				}else{
+					mmMuma.updateDevices("Wi0");
+				}
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
+				// The two following methods are just for testing purposes.
 				// receiveMessageFromTemperatureController();
 				// receiveMessageFromHumidityController();
 			}catch(Exception e){
@@ -252,7 +229,10 @@ public class EventManager implements Runnable{
 		temperatureSensor = TemperatureSensor.getInstance();
 		new Thread(temperatureSensor).start();
 		
-		trespasserSensor = TrespasserSensor.getInstance();
-		new Thread(trespasserSensor).start();
+		windowController = WindowController.getInstance();
+		new Thread(windowController).start();
+		
+		windowSensor = WindowSensor.getInstance();
+		new Thread(windowSensor).start();
 	}
 }

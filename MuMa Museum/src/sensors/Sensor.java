@@ -1,12 +1,12 @@
 /**
  * **************************************************************************************
- * File:Sensor.java 
+ * File: Sensor.java 
  * Course: Software Architecture 
  * Project: Event Architectures
- * Institution: Autonomous University of Zacatecas 
- * Date: November 2015
- * Developer: Ferman Ivan Tovar 
- * Reviewer: Perla Velasco Elizondo
+ * Institution: Mathematics Research Center
+ * Date: April 2016
+ * Developer: José Luis Blanco Aguirre, Freddy Íñiguez López, Carlos Adrian Naal Avila
+ * Reviewer: Dra. Perla Velasco Elizondo
  * **************************************************************************************
  * This class contains the necessary to build a sensor, in order to every 
  * sensor extends from this.
@@ -31,16 +31,12 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 public class Sensor extends Component {
-
     protected int delay = 2500;				// The loop delay (2.5 seconds)
     protected boolean isDone = false;			// Loop termination flag
     protected float driftValue;				// The amount of temperature gained or lost
     private static final String QUEUE_NAME = "muma";
     String outputMessage = "";
     String errorMessage = "";
-
-    
-    protected Sensor() {}
 
     /**
      * This method provides the simulation with random floating point 
@@ -113,19 +109,28 @@ public class Sensor extends Component {
 			int detected_value = Integer.parseInt(CHANNEL_SEND_ID);
 			switch (detected_value){
 				case 4:
-					errorMessage = ">>> [HUMIDITY SENSOR] ERROR! The Message could not be received: ";
+					errorMessage = ">>> [HUMIDITY CONTROLLER] ERROR! The Message could not be received: ";
 					break;
 				case 5:
-					errorMessage = ">>> [TEMPERATURE SENSOR] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				case 6:
-					errorMessage = ">>> [DOOR SENSOR] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				case 7:
-					errorMessage = ">>> [WINDOW SENSOR] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				case 8:
-					errorMessage = ">>> [TRESPASSER SENSOR] ERROR! The Message could not be delivered: ";
+					errorMessage = ">>> [MOVEMENT CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 9:
+					errorMessage = ">>> [INTRUDER CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 10:
+					errorMessage = ">>> [FIRE CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 11:
+					errorMessage = ">>> [SPRINKLERS CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				default:
 					break;
@@ -155,19 +160,28 @@ public class Sensor extends Component {
 			int id_detected = Integer.parseInt(CHANNEL_CONTROLLER_ID);
 			switch (id_detected) {
 			case 4:
-				outputMessage = ">>> [HUMIDITY SENSOR] SUCCESS! I received a message from the Humidity Controller: ";
+				outputMessage = ">>> [HUMIDITY CONTROLLER] SUCCESS! I received a message from the Humidity Sensor: ";
 				break;
 			case 5:
-				outputMessage = ">>> [TEMPERATURE SENSOR] SUCCESS! I received a message from the Temperature Controller: ";
+				outputMessage = ">>> [TEMPERATURE CONTROLLER] SUCCESS! I received a message from the Temperature Sensor: ";
 				break;
 			case 6:
-				outputMessage = ">>> [DOOR SENSOR] SUCCESS! I received a message from the Door Controller: ";
+				outputMessage = ">>> [WINDOW CONTROLLER] SUCCESS! I received a message from the Window Sensor: ";
 				break;
 			case 7:
-				outputMessage = ">>> [WINDOW SENSOR] SUCCESS! I received a message from the Window Controller: ";
+				outputMessage = ">>> [DOOR CONTROLLER] SUCCESS! I received a message from the Door Sensor: ";
 				break;
 			case 8:
-				outputMessage = ">>> [TRESPASSER SENSOR] SUCCESS! I received a message from the Trespasser Controller: ";
+				outputMessage = ">>> [MOVEMENT CONTROLLER] SUCCESS! I received a message from the Movement Sensor: ";
+				break;
+			case 9:
+				outputMessage = ">>> [INTRUDER CONTROLLER] SUCCESS! I received a message from the Intruder Sensor: ";
+				break;
+			case 10:
+				outputMessage = ">>> [FIRE CONTROLLER] SUCCESS! I received a message from the Fire Sensor: ";
+				break;
+			case 11:
+				outputMessage = ">>> [SPRINKLERS CONTROLLER] SUCCESS! I received a message from the Sprinklers Sensor: ";
 				break;
 			default:
 				outputMessage = ">>> [SENSOR WARNING!] Code Unknown";
