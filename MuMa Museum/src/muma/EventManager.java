@@ -18,6 +18,7 @@ import com.rabbitmq.client.Envelope;
 
 import controllers.DoorController;
 import controllers.HumidityController;
+import controllers.MovementController;
 import graphics.MainMenu;
 import controllers.TemperatureController;
 import controllers.WindowController;
@@ -30,6 +31,7 @@ import sensors.DoorSensor;
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
 import sensors.WindowSensor;
+import sensors.MovementSensor;
 
 public class EventManager implements Runnable{
 	private static final String QUEUE_NAME = "muma";
@@ -51,6 +53,8 @@ public class EventManager implements Runnable{
 	private static WindowSensor windowSensor = WindowSensor.getInstance();
 	private static DoorController doorController = DoorController.getInstance();
 	private static DoorSensor doorSensor = DoorSensor.getInstance();
+	private static MovementController movementController = MovementController.getInstance();
+	private static MovementSensor movementSensor = MovementSensor.getInstance();
 	
 	/**
 	 * @method Constructor
@@ -208,6 +212,12 @@ public class EventManager implements Runnable{
 					mmMuma.updateDevices("Do0");
 				}
 				
+				if(movementController.isMovementState()){
+					mmMuma.updateDevices("Mo1");
+				}else{
+					mmMuma.updateDevices("Mo0");
+				}
+				
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
@@ -251,5 +261,11 @@ public class EventManager implements Runnable{
 		
 		doorSensor = DoorSensor.getInstance();
 		new Thread(doorSensor).start();
+		
+		movementController = MovementController.getInstance();
+		new Thread(movementController).start();
+		
+		movementSensor = MovementSensor.getInstance();
+		new Thread(movementSensor).start();
 	}
 }
