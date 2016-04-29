@@ -21,7 +21,8 @@ import sensors.MovementSensor;
 public class MovementController extends Controller implements Runnable {
 	private static final String SENSOR_MOVEMENT_ID = "-8";
 	private static final String CONTROLLER_MOVEMENT_ID = "8";
-    private boolean movementState = false;	// Movement state: false == ok, true == move-detected
+    private boolean movementState = false;	// Movement state: false == not movement detected, true == move detected
+    private boolean intruderState = false;	// Intruder state: false == not intruder detected, true == intruder detected
     
     private static MovementController INSTANCE = new MovementController();
     
@@ -36,13 +37,19 @@ public class MovementController extends Controller implements Runnable {
     			
     			// Sends a message according if detects movement or not
     			if(!isMovementState()){
-    				if(MovementSensor.getInstance().getRandomCoin()){
+    				if(MovementSensor.getInstance().getRandomCoin()){ // Detects a movement
     					setMovementState(true);
     					sendMessage(CONTROLLER_MOVEMENT_ID, "Mo1");
+    					if(MovementSensor.getInstance().getRandomCoin()){ // Also detects an intruder
+    						setIntruderState(true);
+        					sendMessage(CONTROLLER_MOVEMENT_ID, "In1");
+    					}
     				}
     			}else{
     				setMovementState(false);
-    				sendMessage(CONTROLLER_MOVEMENT_ID, "Mo0");
+    				sendMessage(CONTROLLER_MOVEMENT_ID, "Mo0"); // No movement
+    				setIntruderState(false);
+    				sendMessage(CONTROLLER_MOVEMENT_ID, "In0"); // No intruder
     			}
     		} catch (InterruptedException e) {
     			e.printStackTrace();
@@ -75,7 +82,7 @@ public class MovementController extends Controller implements Runnable {
     
     /**
      * @method Getters and Setter
-     * @description Getters and Setter methods to obtain the movement status.
+     * @description Getters and Setter methods to obtain the movement and intruder status.
      */
 	public boolean isMovementState() {
 		return movementState;
@@ -83,5 +90,13 @@ public class MovementController extends Controller implements Runnable {
 
 	public void setMovementState(boolean movementState) {
 		this.movementState = movementState;
+	}
+	
+	public boolean isIntruderState() {
+		return intruderState;
+	}
+
+	public void setIntruderState(boolean intruderState) {
+		this.intruderState = intruderState;
 	}
 }

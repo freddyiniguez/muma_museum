@@ -218,6 +218,12 @@ public class EventManager implements Runnable{
 					mmMuma.updateDevices("Mo0");
 				}
 				
+				if(movementController.isIntruderState()){
+					mmMuma.updateDevices("In1");
+				}else{
+					mmMuma.updateDevices("In0");
+				}
+				
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
