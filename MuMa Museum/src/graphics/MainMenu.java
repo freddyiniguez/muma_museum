@@ -290,6 +290,11 @@ public class MainMenu extends JFrame implements ActionListener {
 				revalidate();
 				repaint();
 				break;
+			case "He2":		// Heater Malfunction ON
+				jlHeaterIcon.setIcon(new ImageIcon(this.getClass().getResource("heater_warning.png")));
+				revalidate();
+				repaint();
+				break;
 			case "Ch1":		// Chiller ON
 				jlChillerIcon.setIcon(new ImageIcon(this.getClass().getResource("chiller_on.png")));
 				revalidate();

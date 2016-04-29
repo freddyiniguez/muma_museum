@@ -203,6 +203,9 @@ public class EventManager implements Runnable{
 				}else{
 					mmMuma.updateDevices("He0");
 				}
+				if(temperatureController.isHeaterMalfunction()){
+					mmMuma.updateDevices("He2");
+				}
 				
 				if(windowController.isWindowState()){
 					mmMuma.updateDevices("Wi1");
