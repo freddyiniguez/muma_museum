@@ -22,8 +22,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -357,11 +360,17 @@ public class MainMenu extends JFrame implements ActionListener {
 		// Open the User Manual
 		if(e.getSource()==jmiUserManual){
 			try {
-				Desktop.getDesktop().open(new File("src/manuals/userManual.pdf"));
-			} catch (Exception e1) {
+				String inputPdf = "manuals/userManual.pdf";
+				Path tempOutput = Files.createTempFile("TempManual", ".pdf");
+				tempOutput.toFile().deleteOnExit();
+				InputStream is = MainMenu.class.getClassLoader().getResourceAsStream(inputPdf);
+				Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+
+				Desktop.getDesktop().open(tempOutput.toFile());
+				} catch (Exception e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "The User's Manual could not be found.", "File not found.", JOptionPane.ERROR_MESSAGE);
-			}
+				}
 		}
 	}
 	
