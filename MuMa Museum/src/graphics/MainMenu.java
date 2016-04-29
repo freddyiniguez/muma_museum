@@ -260,11 +260,79 @@ public class MainMenu extends JFrame implements ActionListener {
 			case "Ch0":		// Chiller OFF
 				jtfChiller.setBackground(Color.GRAY);
 				break;
+			case "Wi1":		// Window Alarm ON
+				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Wi0":		// Window Alarm OFF
+				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Do1":		// Door Alarm ON
+				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Do0":		// Door Alarm OFF
+				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Mo1":		// Movement Alarm ON
+				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Mo0":		// Movement Alarm OFF
+				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
+			case "In1":		// Intruder Alarm ON
+				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "In0":		// Intruder Alarm OFF
+				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Fi1":		// Fire Alarm ON
+				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Fi0":		// Fire Alarm OFF
+				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Sp1":		// Sprinklers Alarm ON
+				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_on.png"));
+				revalidate();
+				repaint();
+				break;
+			case "Sp0":		// Sprinklers Alarm OFF
+				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
+				break;
 			default:
 				jtfHumidifier.setBackground(Color.GRAY);
 				jtfDehumifier.setBackground(Color.GRAY);
 				jtfHeater.setBackground(Color.GRAY);
 				jtfChiller.setBackground(Color.GRAY);
+				jlWindowAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlDoorAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlMovementAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlIntruderAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlFireAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				jlSprinklersAlarm.setIcon(new ImageIcon("/graphics/alarm_off.png"));
+				revalidate();
+				repaint();
 		}
 	}
 	
