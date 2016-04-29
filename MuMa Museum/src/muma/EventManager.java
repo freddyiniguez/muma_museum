@@ -26,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
+import sensors.TrespasserSensor;
 
 public class EventManager implements Runnable{
 	private static final String QUEUE_NAME = "muma";
@@ -37,6 +38,7 @@ public class EventManager implements Runnable{
 	private static TemperatureSensor temperatureSensor = TemperatureSensor.getInstance();
 	private static HumidityController humidityController = HumidityController.getInstance();
 	private static HumiditySensor humiditySensor = HumiditySensor.getInstance();
+	private static TrespasserSensor trespasserSensor = TrespasserSensor.getInstance();
 	
 	private String changeInTemperature;
 	private String changeInHumidity;
@@ -249,5 +251,8 @@ public class EventManager implements Runnable{
 		
 		temperatureSensor = TemperatureSensor.getInstance();
 		new Thread(temperatureSensor).start();
+		
+		trespasserSensor = TrespasserSensor.getInstance();
+		new Thread(trespasserSensor).start();
 	}
 }

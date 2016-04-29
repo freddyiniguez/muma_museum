@@ -124,6 +124,9 @@ public class Sensor extends Component {
 				case 7:
 					errorMessage = ">>> [WINDOW SENSOR] ERROR! The Message could not be delivered: ";
 					break;
+				case 8:
+					errorMessage = ">>> [TRESPASSER SENSOR] ERROR! The Message could not be delivered: ";
+					break;
 				default:
 					break;
 			}
@@ -162,6 +165,9 @@ public class Sensor extends Component {
 				break;
 			case 7:
 				outputMessage = ">>> [WINDOW SENSOR] SUCCESS! I received a message from the Window Controller: ";
+				break;
+			case 8:
+				outputMessage = ">>> [TRESPASSER SENSOR] SUCCESS! I received a message from the Trespasser Controller: ";
 				break;
 			default:
 				outputMessage = ">>> [SENSOR WARNING!] Code Unknown";
