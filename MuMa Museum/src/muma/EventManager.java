@@ -17,6 +17,7 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 import controllers.DoorController;
+import controllers.FireController;
 import controllers.HumidityController;
 import controllers.MovementController;
 import graphics.MainMenu;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import sensors.DoorSensor;
+import sensors.FireSensor;
 import sensors.HumiditySensor;
 import sensors.TemperatureSensor;
 import sensors.WindowSensor;
@@ -55,6 +57,8 @@ public class EventManager implements Runnable{
 	private static DoorSensor doorSensor = DoorSensor.getInstance();
 	private static MovementController movementController = MovementController.getInstance();
 	private static MovementSensor movementSensor = MovementSensor.getInstance();
+	private static FireController fireController = FireController.getInstance();
+	private static FireSensor fireSensor = FireSensor.getInstance();
 	
 	/**
 	 * @method Constructor
@@ -224,6 +228,12 @@ public class EventManager implements Runnable{
 					mmMuma.updateDevices("In0");
 				}
 				
+				if(fireController.isFireState()){
+					mmMuma.updateDevices("Fi1");
+				}else{
+					mmMuma.updateDevices("Fi0");
+				}
+				
 				mmMuma.setTemperature("" + temperatureController.getCurrentTemperature());
 				mmMuma.setHumidity("" + humidityController.getCurrentHumidity()); 
 				
@@ -273,5 +283,11 @@ public class EventManager implements Runnable{
 		
 		movementSensor = MovementSensor.getInstance();
 		new Thread(movementSensor).start();
+		
+		fireController = FireController.getInstance();
+		new Thread(fireController).start();
+		
+		fireSensor = FireSensor.getInstance();
+		new Thread(fireSensor).start();
 	}
 }
