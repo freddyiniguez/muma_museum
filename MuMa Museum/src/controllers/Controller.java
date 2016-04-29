@@ -93,6 +93,9 @@ public class Controller extends Component {
 				case -7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
+				case -8:
+					errorMessage = ">>> [TRESPASSER CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
 				default:
 					break;
 			}
@@ -131,6 +134,9 @@ public class Controller extends Component {
 			case 7:
 				outputMessage = ">>> [WINDOW CONTROLLER] SUCCESS! I received a message from the Window Sensor: ";
 				break;
+			case 8:
+				outputMessage = ">>> [TRESPASSER CONTROLLER] SUCCESS! I received a message from the Trespasser Sensor: ";
+				break;
 			default:
 				outputMessage = ">>> [CONTROLLER WARNING!] Code Unknown";
 				break;
@@ -148,17 +154,20 @@ public class Controller extends Component {
 		}catch(IOException|TimeoutException e){
 			int detected_value = Integer.parseInt(CHANNEL_SENSOR_ID);
 			switch (detected_value){
-				case -4:
+				case 4:
 					errorMessage = ">>> [HUMIDITY CONTROLLER] ERROR! The Message could not be received: ";
 					break;
-				case -5:
+				case 5:
 					errorMessage = ">>> [TEMPERATURE CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
-				case -6:
+				case 6:
 					errorMessage = ">>> [DOOR CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
-				case -7:
+				case 7:
 					errorMessage = ">>> [WINDOW CONTROLLER] ERROR! The Message could not be delivered: ";
+					break;
+				case 8:
+					errorMessage = ">>> [TRESPASSER CONTROLLER] ERROR! The Message could not be delivered: ";
 					break;
 				default:
 					errorMessage = ">>> ERROR! The message could not be delivered: ";
